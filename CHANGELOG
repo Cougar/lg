@@ -1,3 +1,7 @@
+29.12.2002	1.7p2
+	! output parser fix for damped, history and RIB-failure prefixes
+	! wrapped lines are displayed now correctly
+
 27.12.2002	1.7p1
 	! telnet/ssh missing last line fix - thanks to nomad
 

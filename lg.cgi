@@ -31,7 +31,7 @@ use Net::SSH::Perl;
 use Net::SSH::Perl::Cipher;
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.10 2002/12/27 07:28:49 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.12 2002/12/29 18:17:17 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -708,12 +708,14 @@ sub print_results
 				$lastip = "";
 			}
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ ro/i) {
-			s/^([\* ](&gt;| ).{57})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\* ](&gt;| )[i ])([\d\.\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ](&gt;|d|h| )[i ])([\d\.\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
+			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
 		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ ro/i) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif ($command =~ /^show route receive-protocol bgp\s+[\d\.A-Fa-f:]+/i) {
 			s/^([\d\.\s].{64})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
 			s/^([\d\.\s].{24})([\d\.]+)(\s+)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
@@ -721,12 +723,14 @@ sub print_results
 			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ a/i) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ])(&gt;| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
+			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
 		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ a/i) {
-			s/^(.{61})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
 			s/^(.{30}[ ]{7})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
@@ -757,13 +761,15 @@ sub print_results
 			s/^(  )(Export)(: )/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/( )(Import)(: )/($1 . bgplink($2, "neighbors+$ip+routes+all") . $3)/e;
 		} elsif ($command =~ /^show ip bgp re/i) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ])(&gt;| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
+			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show bgp ipv6 re/i) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif (($command =~ /^show route protocol bgp /i) || ($command =~ /^show route aspath-regex /i)) {
 			if (/^[\d\.A-Fa-f:\/\s]{19}([\*\+\- ])\[BGP\//) {
 				if ($1 =~ /[\*\+]/) {
