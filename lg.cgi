@@ -25,13 +25,9 @@ use strict qw(subs vars);
 
 $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
-use IO::Handle;
-use Net::Telnet ();
-use Net::SSH::Perl;
-use Net::SSH::Perl::Cipher;
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.13 2003/01/17 21:47:24 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.15 2003/02/18 10:16:39 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -618,12 +614,16 @@ sub print_results
 	if ($scheme eq "rsh") {
 		open(P, "$rshcmd $host \'$command\' |");
 	} elsif ($scheme eq "ssh") {
+		use IO::Handle;
+		use Net::SSH::Perl;
+		use Net::SSH::Perl::Cipher;
 		$port = 22 if ($port eq "");
 		$ssh = Net::SSH::Perl->new($host, port => $port);
 		$ssh->login($login, $password);
 		my ($out, $err) = $ssh->cmd("$command");
 		@output = split (/\n/, $out);
 	} elsif ($scheme eq "telnet") {
+		use Net::Telnet ();
 		$port = 23 if ($port eq "");
 		$telnet = new Net::Telnet;
 		$telnet->open(Host => $host,
@@ -681,10 +681,16 @@ sub print_results
 			s/^(\d+\.\d+\.\d+\.\d+)(\s+.*\s+)([1-9]\d*)$/($1 . $2 . bgplink($3, "neighbors+$1+routes"))/e;
 			s/^(\d+\.\d+\.\d+\.\d+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
 			# Zebra IPv6 neighbours
-			s/^(                4\s+)(\d+)/($1 . as2link($2))/e;
-			s/^([\dA-Fa-f:]+)$/bgplink($1, "neighbors+$1")/e;
+			s/^(.{15} 4\s+)(\d+)/($1 . as2link($2))/e;
+			s/^([\dA-Fa-f]*:[\dA-Fa-f:]*)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
+			s/^([\dA-Fa-f]*:[\dA-Fa-f:]*)$/bgplink($1, "neighbors+$1")/e;
 		} elsif ($command eq "show bgp ipv6 summary") {
-			s/^(                4\s+)(\d+)/($1 . as2link($2))/e;
+			s/^(.{15} 4\s+)(\d+)/($1 . as2link($2))/e;
+			if (/^([\dA-Fa-f]*:[\dA-Fa-f:]*)\s+4\s+/) {
+				s/^([\dA-Fa-f:]+)(\s+.*\s+)([1-9]\d*)$/($1 . $2 . bgplink($3, "neighbors+${lastip}+routes"))/e;
+				s/^([\dA-Fa-f:]+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
+				$lastip = "";
+			}
 			if (/^([\dA-Fa-f:]+)$/) {
 				$lastip = $1;
 				s/^([\dA-Fa-f:]+)$/bgplink($1, "neighbors+$1")/e;
@@ -728,21 +734,21 @@ sub print_results
 			s/^(.{30}[ ]{7})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) {
 			my $ip = $1;
-			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
-			s/(prefixes )(received)( \d+)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
-			s/(\s+Received prefixes:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
-			s/ (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
-			s/^(  \d+ )(accepted)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/(Prefix )(advertised)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
+			s/(prefixes )(received)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/(\s+)(Received)( prefixes:\s+[1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/ ([1-9]\d* )(accepted)( prefixes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/^(  [1-9]\d* )(accepted)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show bgp ipv6 n\w*\s+([\dA-Fa-f:]+)/i) {
 			my $ip = $1;
-			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
-			s/^  (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
+			s/(Prefix )(advertised)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
+			s/^(  [1-9]\d* )(accepted)( prefixes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
-			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+			s/(\s+remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+			s/(\s+local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+)/i) {
 			my $ip = $1;
 			s/(\s+AS )(\d+)/($1 . as2link($2))/eg;
@@ -862,6 +868,9 @@ sub as2link {
 		$prefix = $1;
 		$line = $2;
 		$suffix = $3;
+	}
+	if ($line =~ /:/) {
+		return($prefix . $line . $suffix);
 	}
 	my @aslist = split(/[^\d]+/, $line);
 	my @separators = split(/[\d]+/, $line);

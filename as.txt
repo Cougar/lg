@@ -265,7 +265,7 @@
 12993	RIPE:Digitalas Ekonomikas Attistibas Centrs
 13244	RIPE:Rietumu Banka
 13297	RIPE:Ebone Nordic Regional network
-13272	RIPE:ComTrade
+13272	RIPE:Starman
 14277	RIPE:Nokia
 15169	ARIN:Google
 15440	RIPE:MicroLink Data (Lithuania)
