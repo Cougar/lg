@@ -14,10 +14,10 @@
   234	ARIN:Blackrose Society
   267	ARIN:Nether.Net
   278	ARIN:Red Academica de Mexico
-  286	RIPE:KPNQwest
+  286	RIPE:KPN Eurorings Backbone AS (formerly KPNQwest)
   293	ARIN:Energy Sciences Network (ESnet)
   513	RIPE:CERN
-  517	RIPE:KPNQwest Germany GmbH
+  517	RIPE:KPN Eurorings (formerly KPNQwest Germany GmbH)
   680	ARIN:DFN-IP service G-WiN
   701	ARIN:ALTERNET (UUNET)
   702	RIPE:UUNET
@@ -25,7 +25,7 @@
   719	RIPE:LANLINK
   766	ARIN:Programa IRIS
   786	ARIN:University of London Computer Centre
-  790	RIPE:KPNQwest Finland
+  790	RIPE:EUnet Finland
  1101	ARIN:SURFnet BV
  1102	ARIN:SURFnet BV
  1103	ARIN:SURFnet BV
@@ -48,7 +48,7 @@
  1759	RIPE:Sonera Corporation Eu Transit AS
  1930	ARIN:Portuguese Academic and Research Network
  2110	RIPE:Esat Net backbone AS (EUnet Ireland / IEUnet)
- 2116	RIPE:KPNQwest Norway
+ 2116	RIPE:Catch SP and Catch Communications (formerly KPNQwest Norway)
  2380	RIPE:ESTNET (EsData)
  2497	ARIN:Japan Network Information Center
  2498	ARIN:Japan Network Information Center
@@ -103,27 +103,20 @@
  2828	ARIN:Concentric Network Corporation
  2905	ARIN:The Internetworking Company of Southern Africa
  2914	ARIN:Verio, Inc.
- 3220	RIPE:KPNQwest Sweden
- 3274	RIPE:Santa Monica Software Finland Oy
- 3327	RIPE:KPNQwest Estonia
- 3332	RIPE:Crebit
- 3336	RIPE:Kolumbus
- 3561	ARIN:Cable & Wireless USA
- 3908	ARIN:Supernet
- 3909	ARIN:Supernet
- 3910	ARIN:Supernet
 # 3154 - 3353 RIPE
- 3220	RIPE:kpnQwest Sweden
+ 3220	RIPE:Internet 5 AB (formerly kpnQwest Sweden)
  3221	RIPE:EENet
  3249	RIPE:Estpak Data (ET)
  3257	RIPE:Nacamar Data Communications
  3265	RIPE:XS4ALL Internet BV
+ 3274	RIPE:Santa Monica Software Finland Oy
  3292	RIPE:TDC Tele Danmark
  3300	RIPE:AUCS Communications Services aka Infonet-Europe, The Netherlands
  3320	RIPE:Deutsche Telekom AG
- 3327	RIPE:KPNQwest Estonia
+ 3327	RIPE:Data Telecom
  3332	RIPE:Crebit
  3333	RIPE:RIPE NCC
+ 3336	RIPE:Kolumbus
  3356	ARIN:Level 3 Communications
  3425	ARIN:Lawrence Livermore Laboratory
  3426	ARIN:Lawrence Livermore Laboratory
@@ -148,8 +141,12 @@
  3445	ARIN:Lawrence Livermore Laboratory
  3549	ARIN:Global Crossing
  3557	ARIN:Vixie Enterprises (Altavista)
+ 3561	ARIN:Cable & Wireless USA
  3748	ARIN:Electronis and Telecommunications Research Institute
  3786	ARIN:DACOM Corporation
+ 3908	ARIN:Supernet
+ 3909	ARIN:Supernet
+ 3910	ARIN:Supernet
  3967	ARIN:Exodus Communication (Yahoo)
  4000	ARIN:Sprint International
  4001	ARIN:Sprint International

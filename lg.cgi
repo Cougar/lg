@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#    Looking Glass CGI with telnet, rexec and remote LG support
+#    Looking Glass CGI with ssh, telnet, rexec and remote LG support
 #                    with IPv4 and IPv6 support
 #
 #    Copyright (C) 2000-2002 Cougar <cougar@random.ee>
@@ -21,28 +21,38 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-use strict;
+use strict qw(subs vars);
 
-use Socket;
+$ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
+
 use IO::Handle;
-
+use Net::Telnet ();
+use Net::SSH::Perl;
+use Net::SSH::Perl::Cipher;
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.6 2002/07/16 07:41:21 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.10 2002/12/27 07:28:49 cougar Exp $';
+
+my $default_ostype = "IOS";
 
 my $lgurl;
 my $logfile;
 my $asfile;
 my $logoimage;
+my $logoalign;
+my $logolink;
 my $title;
 my $favicon;
 my $email;
 my $rshcmd;
+my $ipv4enabled;
 my $ipv6enabled;
+my $httpmethod = "POST";
 
 my %router_list;
 my @routers;
 my %namemap;
+my %ostypes;
 my %cmdmap;
 
 my $default_router;
@@ -50,21 +60,50 @@ my $default_router;
 my $xml_current_router_name = "";
 my $xml_current_cgi_name = "";
 my $xml_current_replace_name = "";
+my $xml_current_replace_proto = "";
 
-my %valid_ipv4_query = (
-	"bgp"			=>	"show ip bgp %s",
-	"advertised-routes"	=>	"show ip bgp neighbors %s advertised-routes",
-	"summary"		=>	"show ip bgp summary",
-	"ping"			=>	"ping %s",
-	"trace"			=>	"traceroute %s"
-);
-
-my %valid_ipv6_query = (
-	"bgp"			=>	"show bgp ipv6 %s",
-	"advertised-routes"	=>	"show bgp ipv6 neighbors %s advertised-routes",
-	"summary"		=>	"show bgp ipv6 summary",
-	"ping"			=>	"ping ipv6 %s",
-	"trace"			=>	"traceroute ipv6 %s"
+my %valid_query = (
+	"ios"		=>	{
+		"ipv4"			=>	{
+			"bgp"			=>	"show ip bgp %s",
+			"advertised-routes"	=>	"show ip bgp neighbors %s advertised-routes",
+			"summary"		=>	"show ip bgp summary",
+			"ping"			=>	"ping %s",
+			"trace"			=>	"traceroute %s"
+			},
+		"ipv6"		=>	{
+			"bgp"			=>	"show bgp ipv6 %s",
+			"advertised-routes"	=>	"show bgp ipv6 neighbors %s advertised-routes",
+			"summary"		=>	"show bgp ipv6 summary",
+			"ping"			=>	"ping ipv6 %s",
+			"trace"			=>	"traceroute ipv6 %s"
+			}
+		},
+	"zebra"		=>	{
+		"ipv4"			=>	{
+			"bgp"			=>	"show ip bgp %s",
+			"advertised-routes"	=>	"show ip bgp neighbors %s advertised-routes",
+			"summary"		=>	"show ip bgp summary",
+			"ping"			=>	"ping %s",
+			"trace"			=>	"traceroute %s"
+			},
+		"ipv6"		=>	{
+			"bgp"			=>	"show bgp ipv6 %s",
+			"advertised-routes"	=>	"show bgp ipv6 neighbors %s advertised-routes",
+			"summary"		=>	"show bgp ipv6 summary",
+			"ping"			=>	"ping ipv6 %s",
+			"trace"			=>	"traceroute ipv6 %s"
+			}
+		},
+	"junos"		=>	{
+		"ipv46"			=>	{
+			"bgp"			=>	"show bgp %s",
+			"advertised-routes"	=>	"show route advertising-protocol bgp %s",
+			"summary"		=>	"show bgp summary",
+			"ping"			=>	"ping count 5 %s",
+			"trace"			=>	"traceroute %s as-number-lookup"
+			}
+		}
 );
 
 my %whois = (
@@ -95,8 +134,25 @@ if ($logfile ne "") {
 	($ENV{HTTP_REFERER}) && ( print LOG " $ENV{'HTTP_REFERER'}");
 }
 
-if ((! defined $valid_ipv4_query{$FORM{query}}) ||
-    (! defined $router_list{$FORM{router}})) {
+my $query_cmd = "";
+
+if (defined $valid_query{$ostypes{$FORM{router}}}{"ipv46"}{$FORM{query}}) {
+	$query_cmd = $valid_query{$ostypes{$FORM{router}}}{"ipv46"}{$FORM{query}};
+} elsif (defined $valid_query{$ostypes{$FORM{router}}}{lc($FORM{protocol})}{$FORM{query}}) {
+	$query_cmd = $valid_query{$ostypes{$FORM{router}}}{lc($FORM{protocol})}{$FORM{query}};
+} elsif (($FORM{router} ne "") || ($FORM{protocol} ne "") || ($FORM{query})) {
+	if ($logfile ne "") {
+		print LOG " \"$FORM{router}\" \"ILLEGAL QUERY: [$ostypes{$FORM{router}}] [$FORM{protocol}] [$FORM{query}]\"\n";
+		close(LOG);
+	}
+	&print_head;
+	&print_form;
+	&print_tail;
+	exit;
+}
+
+if ((! defined $router_list{$FORM{router}}) ||
+    ($query_cmd eq "")) {
 	if ($logfile ne "") {
 		print LOG "\n";
 		close(LOG);
@@ -109,7 +165,7 @@ if ((! defined $valid_ipv4_query{$FORM{query}}) ||
 
 if ($router_list{$FORM{router}} =~ /^http[s]{0,1}:/) {
 	if ($logfile ne "") {
-		print LOG " \"$FORM{router}\" \"$FORM{query} $FORM{addr}\"\n";
+		print LOG " \"$FORM{router}\" \"$FORM{query}" . ($FORM{addr} ne "" ? " $FORM{addr}" : "") . "\"\n";
 		close LOG;
 	}
 	if ($router_list{$FORM{router}} =~ /\?/) {
@@ -118,9 +174,9 @@ if ($router_list{$FORM{router}} =~ /^http[s]{0,1}:/) {
 		$incoming = "?$incoming";
 	}
 	my $remote = $router_list{$FORM{router}};
-	if (defined $cmdmap{$remote}) {
+	if (defined $cmdmap{$remote}{lc($FORM{protocol})}) {
 		$incoming .= "&";
-		my $mapref = $cmdmap{$remote};
+		my $mapref = $cmdmap{$remote}{lc($FORM{protocol})};
 		foreach my $key (keys (%{$mapref})) {
 			next if ($key eq "DEFAULT");
 			(my $urlkey = $key) =~ s/([+*\/\\])/\\$1/g;
@@ -143,7 +199,8 @@ if ($router_list{$FORM{router}} =~ /^http[s]{0,1}:/) {
 	exit;
 }
 
-my $command = sprintf((($FORM{protocol} eq "IPv6") ? $valid_ipv6_query{$FORM{query}} : $valid_ipv4_query{$FORM{query}}), $FORM{addr});
+my $command = sprintf($query_cmd, $FORM{addr});
+
 print LOG " \"$FORM{router}\" \"$command\"\n";
 close LOG;
 
@@ -155,7 +212,7 @@ if ($FORM{addr} !~ /^[\w\.\^\$\-\:\/ ]*$/) {
 
 $FORM{addr} = "" if ($FORM{addr} =~ /^[ ]*$/);
 
-if ($valid_ipv4_query{$FORM{query}} =~ /%s/) {
+if ($query_cmd =~ /%s/) {
 	&print_error("Parameter missing") if ($FORM{addr} eq "");
 } else {
 	&print_warning("No parameter needed") if ($FORM{addr} ne "");
@@ -163,7 +220,39 @@ if ($valid_ipv4_query{$FORM{query}} =~ /%s/) {
 
 my %AS = &read_as_list($asfile);
 
-&print_results($router_list{$FORM{router}}, $command);
+if ($ostypes{$FORM{router}} eq "junos") {
+	if ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+)$/) {
+		# show bgp n.. <IP> ---> show bgp neighbor <IP>
+		$command = "show bgp neighbor $1";
+	} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+) ro\w*$/) {
+		# show bgp n.. <IP> ro.. ---> show route receive-protocol bgp <IP>
+		$command = "show route receive-protocol bgp $1";
+	} elsif ($command =~ /^show bgp neighbors ([\d\.A-Fa-f:]+) routes all$/) {
+		# show bgp neighbors <IP> routes all ---> show route receive-protocol bgp <IP> all
+		$command = "show route receive-protocol bgp $1 all";
+	} elsif ($command =~ /^show bgp neighbors ([\d\.A-Fa-f:]+) routes damping suppressed$/) {
+		# show bgp neighbors <IP> routes damping suppressed ---> show route receive-protocol bgp <IP> damping suppressed
+		$command = "show route receive-protocol bgp $1 damping suppressed";
+	} elsif ($command =~ /show bgp n\w*\s+([\d\.A-Fa-f:]+) a[\w\-]*$/) {
+		# show ip bgp n.. <IP> a.. ---> show route advertising-protocol bgp <IP>
+		$command = "show route advertising-protocol bgp $1";
+	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+)$/) {
+		# show bgp <IP> ---> show route protocol bgp <IP> all
+		$command = "show route protocol bgp $1 all";
+	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+) exact$/) {
+		# show bgp <IP> exact ---> show route protocol bgp <IP> all exact
+		$command = "show route protocol bgp $1 all exact";
+	} elsif ($command =~ /^show bgp re\s+(.*)$/) {
+		# show ip bgp re <regexp> ---> show route aspath-regex <regexp> all
+		my $re = $1;
+		$re = "^.*${re}" if ($re !~ /^\^/);
+		$re = "${re}.*\$" if ($re !~ /\$$/);
+		$re =~ s/_/ /g;
+		$command = "show route aspath-regex \"$re\" all";
+	}
+}
+
+&print_results($FORM{router}, $router_list{$FORM{router}}, $command);
 
 &print_tail;
 exit;
@@ -190,7 +279,8 @@ sub xml_charparse {
 	} elsif (($xml_current_cgi_name ne "") && ($xml_current_replace_name ne "")) {
 		if (($elem eq "replace") ||
 		    ($elem eq "default")) {
-			$cmdmap{$xml_current_cgi_name}{$xml_current_replace_name} .= $str;
+			$cmdmap{$xml_current_cgi_name}{"ipv4"}{$xml_current_replace_name} .= $str if ($xml_current_replace_proto ne "ipv6");
+			$cmdmap{$xml_current_cgi_name}{"ipv6"}{$xml_current_replace_name} .= $str if ($xml_current_replace_proto ne "ipv4");
 		} else {
 			die("Illegal value for configuration tag \"" . $xp->current_element . "\" at line " . $xp->current_line . ", column " . $xp->current_column);
 		}
@@ -210,6 +300,8 @@ sub xml_charparse {
 		$email = $str;
 	} elsif ($elem eq "rshcmd") {
 		$rshcmd = $str;
+	} elsif ($elem eq "httpmethod") {
+		$httpmethod = $str;
 	} elsif ($elem eq "separator") {
 		push @routers, "---- $str ----";
 	} else {
@@ -226,14 +318,24 @@ sub xml_startparse {
 			die("Illegal configuration tag \"$str\" at line " . $xp->current_line . ", column " . $xp->current_column);
 		}
 	} elsif ($elem eq "lg_conf_file") {
-		if (($str2 ne "lgurl") &&
+		if ($str2 eq "logoimage") {
+			for (my $i = 0; $i <= $#attrval; $i += 2) {
+				if (lc($attrval[$i]) eq "align") {
+					$logoalign = " Align=\"" . $attrval[$i+1] . "\"";
+				} elsif (lc($attrval[$i]) eq "link") {
+					$logolink = $attrval[$i+1];
+				} else {
+					die("Illegal parameter for LogoImage \"" . $attrval[$i] . "\" at line " . $xp->current_line . ", column " . $xp->current_column);
+				}
+			}
+		} elsif (($str2 ne "lgurl") &&
 		    ($str2 ne "logfile") &&
 		    ($str2 ne "aslist") &&
-		    ($str2 ne "logoimage") &&
 		    ($str2 ne "htmltitle") &&
 		    ($str2 ne "favicon") &&
 		    ($str2 ne "contactmail") &&
 		    ($str2 ne "rshcmd") &&
+		    ($str2 ne "httpmethod") &&
 		    ($str2 ne "router_list") &&
 		    ($str2 ne "argument_list")) {
 			die("Illegal configuration tag \"$str\" at line " . $xp->current_line . ", column " . $xp->current_column);
@@ -243,14 +345,19 @@ sub xml_startparse {
 			for (my $i = 0; $i <= $#attrval; $i += 2) {
 				if (lc($attrval[$i]) eq "name") {
 					$xml_current_router_name = $attrval[$i+1];
+					$ostypes{$xml_current_router_name} = lc($default_ostype);
+					$ipv4enabled ++;
 				} elsif (lc($attrval[$i]) eq "default") {
 					if (lc($attrval[$i+1]) eq "yes") {
 						$default_router = $xml_current_router_name;
 					}
 				} elsif (lc($attrval[$i]) eq "enableipv6") {
 					if (lc($attrval[$i+1]) eq "yes") {
+						$ipv4enabled--;
 						$ipv6enabled++;
 					}
+				} elsif (lc($attrval[$i]) eq "ostype") {
+					$ostypes{$xml_current_router_name} = lc($attrval[$i+1]);
 				}
 			}
 			if ($xml_current_router_name eq "") {
@@ -283,12 +390,15 @@ sub xml_startparse {
 			for (my $i = 0; $i <= $#attrval; $i += 2) {
 				if (lc($attrval[$i]) eq "param") {
 					$xml_current_replace_name = $attrval[$i+1];
-					$cmdmap{$xml_current_cgi_name}{$xml_current_replace_name} = "";
+				} elsif (lc($attrval[$i]) eq "proto") {
+					$xml_current_replace_proto = lc($attrval[$i+1]);
 				}
 			}
 			if ($xml_current_replace_name eq "") {
 				die("Variable \"Param\" missing at line " . $xp->current_line . ", column " . $xp->current_column);
 			}
+			$cmdmap{$xml_current_cgi_name}{"ipv4"}{$xml_current_replace_name} = "" if ($xml_current_replace_proto ne "ipv6");
+			$cmdmap{$xml_current_cgi_name}{"ipv6"}{$xml_current_replace_name} = "" if ($xml_current_replace_proto ne "ipv4");
 		} elsif ($str2 eq "default") {
 			$xml_current_replace_name = "DEFAULT";
 		} else {
@@ -313,6 +423,7 @@ sub xml_endparse {
 		if (($str2 eq "replace") ||
 		    ($str2 eq "default")) {
 			$xml_current_replace_name = "";
+			$xml_current_replace_proto = "";
 		}
 	}
 }
@@ -320,7 +431,7 @@ sub xml_endparse {
 sub print_head {
 	my ($arg) = @_;
 	print "Content-type: text/html\n\n";
-	print "<!--\n\t$SYS_progid\n-->\n";
+	print "<!--\n\t$SYS_progid\n\thttp://freshmeat.net/projects/lg/\n-->\n";
 	print "<Html>\n";
 	print "<Head>\n";
 	if ($arg ne "") {
@@ -333,7 +444,13 @@ sub print_head {
 	}
 	print "</Head>\n";
 	print "<Body bgcolor=\"#FFFFFF\" text=\"#000000\">\n";
-	print "<Img Src=\"$logoimage\">\n" if ($logoimage ne "");
+	if ($logoimage ne "") {
+		print "<Table Border=\"0\" Width=\"100%\"><Tr><Td$logoalign>";
+		print "<A HREF=\"$logolink\">" if ($logolink ne "");
+		print "<Img Src=\"$logoimage\" Border=\"0\">";
+		print "</A>" if ($logolink ne "");
+		print "</Td></Tr></Table>\n";
+	}
 	print "<Center>\n";
 	if ($arg ne "") {
 		print "<H2>$title - $arg</H2>\n";
@@ -348,7 +465,7 @@ sub print_head {
 
 sub print_form {
 	print <<EOT;
-<Form Method="POST">
+<Form Method="$httpmethod">
 <center>
 <table border=0 bgcolor="#EFEFEF"><tr><td>
 <table border=0 cellpading=2 cellspacing=2>
@@ -364,7 +481,7 @@ sub print_form {
 <tr><td><Input type="radio" name="query" value="ping"></td><td>&nbsp;ping</td></tr>
 <tr><td><Input type="radio" name="query" value="trace" SELECTED></td><td>&nbsp;trace</td></tr>
 EOT
-	if ($ipv6enabled) {
+	if ($ipv4enabled && $ipv6enabled) {
 		print <<EOT;
 <tr><td></td><td><Select Name="protocol">
 <Option Value = \"IPv4\"> IPv4
@@ -372,8 +489,10 @@ EOT
 </Select></td></tr>
 </table>
 EOT
-	} else {
+	} elsif ($ipv4enabled) {
 		print "</table>\n<Input type=\"hidden\" name=\"protocol\"value=\"IPv4\">\n";
+	} elsif ($ipv6enabled) {
+		print "</table>\n<Input type=\"hidden\" name=\"protocol\"value=\"IPv6\">\n";
 	}
 	print <<EOT;
 </td>
@@ -381,11 +500,10 @@ EOT
 <td>&nbsp;<br><Select Name="router">
 EOT
 	my $remotelg = 0;
-#	foreach my $router (sort (keys %router_list)) {
 	for (my $i = 0; $i <= $#routers; $i++) {
 		my $router = $routers[$i];
 		if ($router =~ /^---- .* ----$/) {
-			print "<Option Value = \"\"> $router\n";
+			print "<Option Value =\"\"> $router\n";
 			next;
 		}
 		my $descr = "";
@@ -402,7 +520,7 @@ EOT
 			$descr .= " *";
 			$remotelg++;
 		}
-		print "<Option Value = \"$router\"$default> $descr\n";
+		print "<Option Value=\"$router\"$default> $descr\n";
 	}
 	if ($remotelg) {
 		$remotelg = "<sup>*</sup>&nbsp;remote&nbsp;LG&nbsp;script";
@@ -464,76 +582,107 @@ EOT
 
 sub print_results
 {
-	my ($host, $command) = @_;
+	my ($hostname, $host, $command) = @_;
 	my $best = 0;
 	my $count = 0;
-	my $method = "";
-	if ($host =~ /^([^:]+):(.*)$/) {
-		$method = $1;
-		$host = $2;
+	my $telnet;
+	my $ssh;
+	my @output;
+	# This regexp is from RFC 2396 - URI Generic Syntax
+	if ($host !~ /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/) {
+		die ("Illegal URI: \"$host\"");
+	}
+	my $scheme = $2;
+	$host = $4;
+	if ($host !~ /^((([^:\@\[]+)(:([^\@]+))?)\@)?([^\/?#]*)$/) {
+		die ("Can't extract login/pass from host: \"$host\"");
+	}
+	my $login = $3;
+	my $password = $5;
+	$host = $6;
+	my $port;
+	if ($host =~ /^\[(.+)\](:(\d+))?$/) {
+		$host = $1;
+		$port = $3;
+	} elsif ($host =~ /^([^:]+)(:(\d+))?$/) {
+		$host = $1;
+		$port = $3;
+	} else {
+		die ("Illegal host address \"$host\"");
 	}
 
-	print "<B>Host:</B> $host\n";
+	print "<B>Router:</B> $hostname\n";
 	print "<BR>\n";
 	print "<B>Command:</B> $command\n";
-	print "<P><Pre><tt>\n";
-	if ($method eq "rsh") {
-		open(P, "$rshcmd $host $command |");
-	} elsif ($method =~ /^telnet(.*)/) {
-		my ($tmp, $port, $login, $password) = split (/\//, $1);
+	print "<P><Pre><code>\n";
+	if ($scheme eq "rsh") {
+		open(P, "$rshcmd $host \'$command\' |");
+	} elsif ($scheme eq "ssh") {
+		$port = 22 if ($port eq "");
+		$ssh = Net::SSH::Perl->new($host, port => $port);
+		$ssh->login($login, $password);
+		my ($out, $err) = $ssh->cmd("$command");
+		@output = split (/\n/, $out);
+	} elsif ($scheme eq "telnet") {
 		$port = 23 if ($port eq "");
-		&connect_to(*P, $host, $port);
-		$_ = P->getc;			# be sure we got some answer
-		if ($login ne "") {
-			print P "$login\r";
-			$_ = <P>;
+		$telnet = new Net::Telnet;
+		$telnet->open(Host => $host,
+		              Port => $port);
+		if ($ostypes{$FORM{router}} eq "junos") {
+			$telnet->waitfor('/ogin:.*$/');
+			$telnet->print("$login");
+			$telnet->waitfor('/word:.*$/');
+			$telnet->print("$password");
+			$telnet->waitfor('/> $/');
+			$telnet->print("");
+			my ($prematch, $match) = $telnet->waitfor('/.*> $/');
+			$match =~ s/[^\d\w> ]/./g;
+			$telnet->prompt("/${match}/");
+			@output = $telnet->cmd("$command | no-more");
+		} elsif (($ostypes{$FORM{router}} eq "ios") || ($ostypes{$FORM{router}} eq "zebra")) {
+			if ($login ne "") {
+				$telnet->waitfor('/(ogin|name|word):.*$/');
+				$telnet->print("$login");
+			}
 			if ($password ne "") {
-				print P "$password\r";
-				$_ = <P>;
+				$telnet->waitfor('/word:.*$/');
+				$telnet->print("$password");
 			}
+			$telnet->waitfor('/[\@\w\-\.]+>[ ]*$/');
+			$telnet->print("terminal length 0");
+			my ($prematch, $match) = $telnet->waitfor('/.*>[ ]*$/');
+			$match =~ s/[^\d\w> ]/./g;
+			$telnet->prompt("/${match}/");
+			@output = $telnet->cmd("$command");
 		}
-		print P "terminal length 0\r";	# password
-		$_ = <P>;
-		print P "$command\r";
-		$_ = <P>;
+		$telnet->print("quit");
+		$telnet->close;
 	} else {
-		print_error("Configuration error, no such method: $method\n");
+		print_error("Configuration error, no such scheme: $scheme\n");
 	}
-	my $header = 1;
-	my $linecache = "";
 	my $lastip = "";
-	while (! (P->eof)) {
-		if ($method =~ /^telnet/) {
-			my $last_char = P->getc;
-			$linecache .= $last_char;
-			if ($header && $linecache =~ /($command)/) {
-				my $tmp = <P>;
-				$linecache = "";
-				$header = 0;
-				next;
-			}
-			if ($header) {
-				$linecache = "" if ($last_char eq "\n");
-				next;
-			}
-			if ($linecache =~ /^[\w\-\.]+>/) {
-				$linecache = "";
-				print P "quit\r";
-				last;
-			}
-			next unless ($last_char eq "\n");
-			$_ = $linecache;
-			$linecache = "";
+	while (1) {
+		if (($scheme eq "telnet") ||
+		    ($scheme eq "ssh")) {
+			last if ($#output < 0);
+			$_ = shift (@output);
 		} else {
-			$_ = <P>
+			last if (eof(P));
+			$_ = <P>;
 		}
 
 		s|[\r\n]||g;
+		s|&|&amp;|g;
+		s|<|&lt;|g;
+		s|>|&gt;|g;
 		if ($command eq "show ip bgp summary") {
 			s/( local AS number )(\d+)/($1 . as2link($2))/e;
 			s/^([\d\.]+\s+\d+\s+)(\d+)/($1 . as2link($2))/e;
 			s/^(\d+\.\d+\.\d+\.\d+)(\s+.*\s+)([1-9]\d*)$/($1 . $2 . bgplink($3, "neighbors+$1+routes"))/e;
 			s/^(\d+\.\d+\.\d+\.\d+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
+			# Zebra IPv6 neighbours
+			s/^(                4\s+)(\d+)/($1 . as2link($2))/e;
+			s/^([\dA-Fa-f:]+)$/bgplink($1, "neighbors+$1")/e;
 		} elsif ($command eq "show bgp ipv6 summary") {
 			s/^(                4\s+)(\d+)/($1 . as2link($2))/e;
 			if (/^([\dA-Fa-f:]+)$/) {
@@ -544,44 +693,93 @@ sub print_results
 				s/^(\s+.*\s+)([1-9]\d*)$/($1 . bgplink($2, "neighbors+${lastip}+routes"))/e;
 				$lastip = "";
 			}
+		} elsif ($command eq "show bgp summary") {
+			# JunOS
+			if (/^([\dA-Fa-f:][\d\.A-Fa-f:]+)\s+/) {
+				$lastip = $1;
+				# IPv4
+				s/^(\d+\.\d+\.\d+\.\d+)(\s+.*\s+)([1-9]\d*)(\s+\d+\s+\d+\s+\d+\s+\d+\s+[\d:]+\s+)(\d+)\/(\d+)\/(\d+)(\s+)/($1 . $2 . bgplink($3, "neighbors+$1+routes") . $4 . bgplink($5, "neighbors+$1+routes") . "\/" . bgplink($6, "neighbors+$1+routes+all") . "\/" . bgplink($7, "neighbors+$1+routes+damping+suppressed") . $8)/e;
+				# IPv4/IPv6
+				s/^([\dA-Fa-f:][\d\.A-Fa-f:]+\s+)(\d+)(\s+)/($1 . as2link($2) . $3)/e;
+				s/^([\dA-Fa-f:][\d\.A-Fa-f:]+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
+			}
+			if (($lastip ne "") && (/(  [^:]+: )(\d+)\/(\d+)\/(\d+)$/)) {
+				s/^(  [^:]+: )(\d+)\/(\d+)\/(\d+)$/($1 . bgplink($2, "neighbors+${lastip}+routes") . "\/" . bgplink($3, "neighbors+${lastip}+routes+all") . "\/" . bgplink($4, "neighbors+${lastip}+routes+damping+suppressed"))/e;
+				$lastip = "";
+			}
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ ro/i) {
+			s/^([\* ](&gt;| ).{57})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\* ](&gt;| )[i ])([\d\.\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
+		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ ro/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
-		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\da-f:]+ ro/i) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+		} elsif ($command =~ /^show route receive-protocol bgp\s+[\d\.A-Fa-f:]+/i) {
+			s/^([\d\.\s].{64})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\d\.\s].{24})([\d\.]+)(\s+)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
+			s/^([\d\.\/]+)(\s+)/(bgplink($1, $1) . $2)/e;
+			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
+			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ a/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ])(&gt;| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ a/i) {
 			s/^(.{61})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2))/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
+			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
+			s/^(.{30}[ ]{7})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) {
 			my $ip = $1;
 			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/(prefixes )(received)( \d+)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/(\s+Received prefixes:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
 			s/ (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
 			s/^(  \d+ )(accepted)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-		} elsif ($command =~ /^show bgp ipv6 n\w*\s+([\da-f:]+)/i) {
+		} elsif ($command =~ /^show bgp ipv6 n\w*\s+([\dA-Fa-f:]+)/i) {
 			my $ip = $1;
 			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/^  (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+		} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+)/i) {
+			my $ip = $1;
+			s/(\s+AS )(\d+)/($1 . as2link($2))/eg;
+			s/(\s+AS: )(\d+)/($1 . as2link($2))/eg;
+			s/^(    Active prefixes:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes"))/e;
+			s/^(    Received prefixes:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes+all"))/e;
+			s/^(    Suppressed due to damping:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes+damping+suppressed"))/e;
+			s/^(  )(Export)(: )/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
+			s/( )(Import)(: )/($1 . bgplink($2, "neighbors+$ip+routes+all") . $3)/e;
 		} elsif ($command =~ /^show ip bgp re/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ])(&gt;| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show bgp ipv6 re/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
-			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+			s/^([\* ])(&gt;| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+		} elsif (($command =~ /^show route protocol bgp /i) || ($command =~ /^show route aspath-regex /i)) {
+			if (/^[\d\.A-Fa-f:\/\s]{19}([\*\+\- ])\[BGP\//) {
+				if ($1 =~ /[\*\+]/) {
+					$best = "\#FF0000";
+				} elsif ($1 eq "-") {
+					$best = "\#008800";
+				} else {
+					$best = "";
+				}
+			} elsif (/^$/) {
+				$best = "";
+			}
+			$_ = "<FONT COLOR=\"${best}\">$_</FONT>" if ($best ne "");
+			s/( from )([0-9\.A-Fa-f:]+)/($1 . bgplink($2, "neighbors+$2"))/e;
+			$_ = as2link($_) if (/\s+AS path: \d+/);
+			s/^(<FONT COLOR=\"#FF0000\">)?([\dA-Fa-f:]+[\d\.A-Fa-f:\/]+)(\s*)/("$1<B>" . bgplink($2, "$2+exact") . "<\/B>$3")/e;
 		} elsif ($command =~ /bgp/) {
 			s|^(BGP routing table entry for) (\S+)|$1 <B>$2</B>|;
 			s|^(Paths:\ .*)\ best\ \#(\d+)
@@ -599,15 +797,15 @@ sub print_results
 			$_ = "<FONT COLOR=\"\#FF0000\">$_</FONT>" if $best && $best == $count;
 			s/( from )([0-9\.A-Fa-f:]+)( )/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 		} elsif ($command =~ /^trace/i) {
-			s/(\[AS )(\d+)(\])/($1 . as2link($2) . $3)/e;
+			s/(\[AS\s+)(\d+)(\])/($1 . as2link($2) . $3)/e;
 		}
 		print "$_\n";
 	}
 	close(P);
-	print "</tt></Pre>\n";
+	print "</code></Pre>\n";
 }
 
-######## The rest is borrowed from NCSA WebMonitor "mail" code 
+######## Portion of code is borrowed from NCSA WebMonitor "mail" code 
 
 sub cgi_decode {
 	my ($incoming) = @_;
@@ -665,16 +863,6 @@ sub read_as_list {
 	}
 	close(F);
 	return (%AS);
-}
-
-sub connect_to {
-	my ($fd, $remote, $port) = @_;
-	my $iaddr = inet_aton($remote)|| die "no host: $remote";
-	my $paddr = sockaddr_in($port, $iaddr);
-	my $proto = getprotobyname('tcp');
-	socket($fd, PF_INET, SOCK_STREAM, $proto) || die "socket: $!";
-	connect($fd, $paddr) || return -1;
-	$fd->autoflush(1);
 }
 
 sub as2link {

@@ -1,3 +1,13 @@
+27.12.2002	1.7p1
+	! telnet/ssh missing last line fix - thanks to nomad
+
+03.12.2002	1.7
+	+ Juniper output support (telnet, SSH)
+	+ Telnet protocol support (Net::Telnet required)
+	+ SSH support (Net::SSH::Perl required)
+	! RFC 2396 URI syntax for router address
+
+
 16.07.2002	1.6
 	+ Favicon support
 	+ Perl script for downloading AS num data from RIPE/ARIN/APNIC
