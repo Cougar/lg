@@ -1,3 +1,6 @@
+17.06.2003	1.7p7
+	! as2link parser fix - thanks to Rob Wise
+
 20.05.2003	1.7p6
 	! deny IPv6 addresses in IPv4 query
 	+ It is now possible to see all BGP neighbors

@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.17 2003/05/20 06:23:19 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.18 2003/06/17 09:39:26 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -875,7 +875,7 @@ sub as2link {
 
 	my $prefix;
 	my $suffix;
-	if ($line =~ /^([^\d]*)([\d\s]*\d)([^\d]*)$/) {
+	if ($line =~ /^([^\d]*)([\d\s]*\d)(.*)$/) {
 		$prefix = $1;
 		$line = $2;
 		$suffix = $3;
