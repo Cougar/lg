@@ -6,5 +6,3 @@
 #include as-arin.txt
 #include as-apnic.txt
 #include as-ripe.txt
-#include as-jpnic.txt
-#include as-lacnic.txt

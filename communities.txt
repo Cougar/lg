@@ -1,0 +1,575 @@
+#
+# Community definitions file
+#
+#
+# All lines beginning with '#' or empty are ingored. Other lines should be
+# formatted as
+#
+#	<name><tab..><value>
+#
+# The only exception is AS start tag in form
+#
+#	AS<num>
+#
+#
+# Global variables
+#	All global variables are upper case. Variable name length should be
+#	equal with digit count. All letters should be the same.
+#
+#	A=1		one digit variable
+#	XXX=010		three digit variable
+#
+#
+# Local variables
+#	All local variables are lower case. Variable name length should be
+#	equal with digit count. All letters should be the same. Variables
+#	are usable only within the current AS list and will be deleted after
+#	next AS num start tag.
+#
+#	n=0		one digit variable
+#	cccc=1234	four digit variable
+#
+#
+# Community lists for any AS should begin with start tag.
+#
+#	AS555
+#	AS12345
+#
+#
+# Public community documents can be referred with special tag "URL"
+#
+#	URL	http://noc.domain.net/communities.txt
+#
+#
+# Communities can be in normal form with description
+#
+#	123:111		test community
+#	65500:9999	something else..
+#
+# or can include variable names in them. In this case all strings in form of
+# $<variable name> will be replaced with given variable description
+#
+#	123:300xx	Customer route from $xx
+#	1234:3xxyK	Prepend $xx to $y $K times
+#
+
+#
+# GLOBAL VARIABLES
+#
+
+#
+# ISO Country Codes:
+#
+CCC=016		AMERICAN SAMOA
+CCC=028		ANTIGUA AND BARBUDA
+CCC=070		BOSNIA AND HERZEGOWINA
+CCC=074		BOUVET ISLAND
+CCC=086		BRITISH INDIAN OCEAN TERRITORY
+CCC=096		BRUNEI DARUSSALAM
+CCC=854		BURKINA FASO
+CCC=132		CAPE VERDE
+CCC=136		CAYMAN ISLANDS
+CCC=140		CENTRAL AFRICAN REPUBLIC
+CCC=162		CHRISTMAS ISLAND
+CCC=166		COCOS (KEELING) ISLANDS
+CCC=180		CONGO, THE DEMOCRATIC REPUBLIC OF THE
+CCC=184		COOK ISLANDS
+CCC=188		COSTA RICA
+CCC=384		COTE D'IVOIRE
+CCC=191		CROATIA (local name: Hrvatska)
+CCC=203		CZECH REPUBLIC
+CCC=214		DOMINICAN REPUBLIC
+CCC=626		EAST TIMOR
+CCC=222		EL SALVADOR
+CCC=226		EQUATORIAL GUINEA
+CCC=238		FALKLAND ISLANDS (MALVINAS)
+CCC=234		FAROE ISLANDS
+CCC=249		FRANCE, METROPOLITAN
+CCC=254		FRENCH GUIANA
+CCC=258		FRENCH POLYNESIA
+CCC=260		FRENCH SOUTHERN TERRITORIES
+CCC=334		HEARD AND MC DONALD ISLANDS
+CCC=336		HOLY SEE (VATICAN CITY STATE)
+CCC=344		HONG KONG
+CCC=364		IRAN (ISLAMIC REPUBLIC OF)
+CCC=408		KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF
+CCC=410		KOREA, REPUBLIC OF
+CCC=418		LAO PEOPLE'S DEMOCRATIC REPUBLIC
+CCC=434		LIBYAN ARAB JAMAHIRIYA
+CCC=807		MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+CCC=584		MARSHALL ISLANDS
+CCC=583		MICRONESIA, FEDERATED STATES OF
+CCC=498		MOLDOVA, REPUBLIC OF
+CCC=530		NETHERLANDS ANTILLES
+CCC=540		NEW CALEDONIA
+CCC=554		NEW ZEALAND
+CCC=574		NORFOLK ISLAND
+CCC=580		NORTHERN MARIANA ISLANDS
+CCC=598		PAPUA NEW GUINEA
+CCC=630		PUERTO RICO
+CCC=643		RUSSIAN FEDERATION
+CCC=659		SAINT KITTS AND NEVIS
+CCC=662		SAINT LUCIA
+CCC=670		SAINT VINCENT AND THE GRENADINES
+CCC=674		SAN MARINO
+CCC=678		SAO TOME AND PRINCIPE
+CCC=682		SAUDI ARABIA
+CCC=694		SIERRA LEONE
+CCC=703		SLOVAKIA (Slovak Republic)
+CCC=090		SOLOMON ISLANDS
+CCC=710		SOUTH AFRICA
+CCC=239		SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+CCC=144		SRI LANKA
+CCC=654		ST. HELENA
+CCC=666		ST. PIERRE AND MIQUELON
+CCC=744		SVALBARD AND JAN MAYEN ISLANDS
+CCC=760		SYRIAN ARAB REPUBLIC
+CCC=158		TAIWAN, PROVINCE OF CHINA
+CCC=834		TANZANIA, UNITED REPUBLIC OF
+CCC=780		TRINIDAD AND TOBAGO
+CCC=796		TURKS AND CAICOS ISLANDS
+CCC=784		UNITED ARAB EMIRATES
+CCC=826		UNITED KINGDOM
+CCC=840		UNITED STATES
+CCC=581		UNITED STATES MINOR OUTLYING ISLANDS
+CCC=704		VIET NAM
+CCC=092		VIRGIN ISLANDS (BRITISH)
+CCC=850		VIRGIN ISLANDS (U.S.)
+CCC=876		WALLIS AND FUTUNA ISLANDS
+CCC=732		WESTERN SAHARA
+CCC=004		AFGHANISTAN
+CCC=008		ALBANIA
+CCC=010		ANTARCTICA
+CCC=012		ALGERIA
+CCC=020		ANDORRA
+CCC=024		ANGOLA
+CCC=031		AZERBAIJAN
+CCC=032		ARGENTINA
+CCC=036		AUSTRALIA
+CCC=040		AUSTRIA
+CCC=044		BAHAMAS
+CCC=048		BAHRAIN
+CCC=050		BANGLADESH
+CCC=051		ARMENIA
+CCC=052		BARBADOS
+CCC=056		BELGIUM
+CCC=060		BERMUDA
+CCC=064		BHUTAN
+CCC=068		BOLIVIA
+CCC=072		BOTSWANA
+CCC=076		BRAZIL
+CCC=084		BELIZE
+CCC=100		BULGARIA
+CCC=104		MYANMAR
+CCC=108		BURUNDI
+CCC=112		BELARUS
+CCC=116		CAMBODIA
+CCC=120		CAMEROON
+CCC=124		CANADA
+CCC=148		CHAD
+CCC=152		CHILE
+CCC=156		CHINA
+CCC=170		COLOMBIA
+CCC=174		COMOROS
+CCC=175		MAYOTTE
+CCC=178		CONGO
+CCC=192		CUBA
+CCC=196		CYPRUS
+CCC=204		BENIN
+CCC=208		DENMARK
+CCC=212		DOMINICA
+CCC=218		ECUADOR
+CCC=231		ETHIOPIA
+CCC=232		ERITREA
+CCC=233		ESTONIA
+CCC=242		FIJI
+CCC=246		FINLAND
+CCC=250		FRANCE
+CCC=262		DJIBOUTI
+CCC=266		GABON
+CCC=268		GEORGIA
+CCC=270		GAMBIA
+CCC=276		GERMANY
+CCC=288		GHANA
+CCC=292		GIBRALTAR
+CCC=296		KIRIBATI
+CCC=300		GREECE
+CCC=304		GREENLAND
+CCC=308		GRENADA
+CCC=312		GUADELOUPE
+CCC=316		GUAM
+CCC=320		GUATEMALA
+CCC=324		GUINEA
+CCC=328		GUYANA
+CCC=332		HAITI
+CCC=340		HONDURAS
+CCC=348		HUNGARY
+CCC=352		ICELAND
+CCC=356		INDIA
+CCC=360		INDONESIA
+CCC=368		IRAQ
+CCC=372		IRELAND
+CCC=376		ISRAEL
+CCC=380		ITALY
+CCC=388		JAMAICA
+CCC=392		JAPAN
+CCC=398		KAZAKHSTAN
+CCC=400		JORDAN
+CCC=404		KENYA
+CCC=414		KUWAIT
+CCC=417		KYRGYZSTAN
+CCC=422		LEBANON
+CCC=426		LESOTHO
+CCC=428		LATVIA
+CCC=430		LIBERIA
+CCC=438		LIECHTENSTEIN
+CCC=440		LITHUANIA
+CCC=442		LUXEMBOURG
+CCC=446		MACAU
+CCC=450		MADAGASCAR
+CCC=454		MALAWI
+CCC=458		MALAYSIA
+CCC=462		MALDIVES
+CCC=466		MALI
+CCC=470		MALTA
+CCC=474		MARTINIQUE
+CCC=478		MAURITANIA
+CCC=480		MAURITIUS
+CCC=484		MEXICO
+CCC=492		MONACO
+CCC=496		MONGOLIA
+CCC=500		MONTSERRAT
+CCC=504		MOROCCO
+CCC=508		MOZAMBIQUE
+CCC=512		OMAN
+CCC=516		NAMIBIA
+CCC=520		NAURU
+CCC=524		NEPAL
+CCC=528		NETHERLANDS
+CCC=533		ARUBA
+CCC=548		VANUATU
+CCC=558		NICARAGUA
+CCC=562		NIGER
+CCC=566		NIGERIA
+CCC=570		NIUE
+CCC=578		NORWAY
+CCC=585		PALAU
+CCC=586		PAKISTAN
+CCC=591		PANAMA
+CCC=600		PARAGUAY
+CCC=604		PERU
+CCC=608		PHILIPPINES
+CCC=612		PITCAIRN
+CCC=616		POLAND
+CCC=620		PORTUGAL
+CCC=624		GUINEA-BISSAU
+CCC=634		QATAR
+CCC=638		REUNION
+CCC=642		ROMANIA
+CCC=646		RWANDA
+CCC=660		ANGUILLA
+CCC=686		SENEGAL
+CCC=690		SEYCHELLES
+CCC=702		SINGAPORE
+CCC=705		SLOVENIA
+CCC=706		SOMALIA
+CCC=716		ZIMBABWE
+CCC=724		SPAIN
+CCC=736		SUDAN
+CCC=740		SURINAME
+CCC=748		SWAZILAND
+CCC=752		SWEDEN
+CCC=756		SWITZERLAND
+CCC=762		TAJIKISTAN
+CCC=764		THAILAND
+CCC=768		TOGO
+CCC=772		TOKELAU
+CCC=776		TONGA
+CCC=788		TUNISIA
+CCC=792		TURKEY
+CCC=795		TURKMENISTAN
+CCC=798		TUVALU
+CCC=800		UGANDA
+CCC=804		UKRAINE
+CCC=818		EGYPT
+CCC=858		URUGUAY
+CCC=860		UZBEKISTAN
+CCC=862		VENEZUELA
+CCC=882		SAMOA
+CCC=887		YEMEN
+CCC=891		YUGOSLAVIA
+CCC=894		ZAMBIA
+
+
+#
+# EUnet Finland
+# as790draft.pdf
+# last update: 27.06.2003
+#
+
+AS790
+
+790:80		Set LOCAL_PREF to 80
+790:90		Set LOCAL_PREF to 90
+790:100		Set LOCAL_PREF to 100
+790:110		Set LOCAL_PREF to 110
+
+x=0		Announce as is
+x=1		Announce with 790 prepended to as-path
+x=2		Announce with 790 790 prepended to as-path
+x=3		Announce with 790 790 790 prepended to as-path
+x=9		(default and takes precedence if present) Don't announce
+
+790:90x		$x to all AS790 customers
+790:100x	$x to all transits
+790:101x	$x to AS6667 EUnet Finland transit
+790:200x	$x to all peers
+790:201x	$x to peers in Helsinki Finland and at Ficix
+790:202x	$x to peers in Tampere Finland
+
+790:3000	internal or customer
+790:3001	public peering
+790:3003	private peering
+790:3004	transit
+
+790:4000	Tampere Finland
+790:4001	Turku Finland
+790:4002	Helsinki Finland
+
+790:9999	black hole route
+
+#
+# Data Telecom
+# last update: 02.07.2003
+#
+
+AS3327
+
+3327:30010	Tallinn
+3327:30011	TIX-LAN public peering
+3327:30020	Tartu
+3327:30021	Tartu MIX-LAN public peering
+
+3327:60		Do not export
+
+3327:80		Let upstream set LOCAL_PREF to 80
+3327:90		Let upstream set LOCAL_PREF to 90
+3327:100	Let upstream set LOCAL_PREF to 100
+3327:110	Let upstream set LOCAL_PREF to 110
+
+#
+# Level 3 Communications
+# http://www.ripe.net/perl/whois?AS3356
+# last update: 02.07.2003
+#
+
+AS3356
+
+URL		http://www.ripe.net/perl/whois?AS3356
+
+3356:123	Customer route
+3356:666	Peer route
+
+3356:680	MEDs ignored from this non-customer peer
+3356:681	MEDs accepted from this non-customer peer
+3356:685	MEDs honored across NA/EU boundary
+
+3356:911	"internal use" communities received from peer
+
+3356:2531	AMSIX
+3356:2532	BNIX
+3356:2533	DECIX
+3356:2534	LINX
+3356:2536	PARIX
+3356:2537	SFINX
+3356:2561	AADS
+3356:2562	FIX-West
+3356:2567	PAIX-SJO
+
+3356:2001	CHI - Chicago
+3356:2002	SDG - San Diego
+3356:2003	LAX - Los Angeles
+3356:2004	DEN - Denver
+3356:2005	PHI - Philadelphia
+3356:2006	WDC - Washington DC
+3356:2007	DET - Detroit
+3356:2008	DAL - Dallas
+3356:2009	SFO - San Francisco
+3356:2010	NYC - New York City
+3356:2011	SJO - San Jose
+3356:2012	SEA - Seattle
+3356:2013	ATL - Atlanta
+3356:2014	HOU - Houston
+3356:2015	BOS - Boston
+3356:2018	WEE - Weehawken
+3356:2019	BAL - Baltimore
+3356:2020	CIN - Cincinnati
+3356:2021	STM - Stamford
+3356:2022	MIA - Miami
+3356:2023	TMP - Tampa
+3356:2024	ORL - Orlando
+3356:2025	STL - St Louis
+3356:2026	PHX - Phoenix
+3356:2027	RCH - Richmond
+3356:2028	MEM - Memphis
+3356:2029	SLC - Salt Lake City
+3356:2030	SAC - Sacramento
+3356:2031	RAL - Raleigh
+3356:2032	SAT - San Antonio
+3356:2033	LVG - Las Vegas
+3356:2034	CLT - Charlotte
+3356:2035	CLE - Cleveland
+3356:2036	OAK - Oakland
+3356:2037	NVL - Nashville
+3356:2038	TUS - Tustin
+3356:2039	PAI - Palo Alto (PAIX)
+3356:2064	LON - London
+3356:2065	FRF - Frankfurt
+3356:2066	PAR - Paris
+3356:2067	AMS - Amsterdam
+3356:2068	BRU - Brussels
+3356:2069	DUS - Dusseldorf
+3356:2070	HAM - Hamburg
+3356:2071	BER - Berlin
+3356:2072	MUN - Munich
+3356:2074	MLN - Milan
+3356:2075	ZUR - Zurich
+3356:2076	STK - Stockholm
+3356:2077	MAD - Madrid
+3356:2078	GEN - Geneva
+
+3356:500	UK
+3356:501	Germany
+3356:502	France
+3356:503	Netherlands
+3356:504	Belgium
+3356:505	Italy
+3356:506	Switzerland
+3356:507	Sweden
+3356:508	Spain
+3356:575	USA
+3356:576	Canada
+
+3356:2		Europe
+3356:3		North America
+
+3356:70		set local preference to 70
+3356:80		set local preference to 80
+3356:90		set local preference to 90
+
+
+#
+# Globalcrossing
+# https://robin.gblx.net/api/docs/customer-communities.html
+# last update: 27.06.2003
+#
+
+AS3549
+
+URL		https://robin.gblx.net/api/docs/customer-communities.html
+
+3549:100	set local preference 100
+3549:200	set local preference 200
+3549:275	set local preference 275
+3549:300	set local preference 300
+3549:350	set local preference 350
+
+3549:600	Deny inter-continental export of tagged prefix [iBGP]
+3549:666	Deny inter-as export of tagged prefix (carry on AS 3549 only) [eBGP]
+3549:888	Depref inter-continental export of tagged prefix [iBGP] (not supported universally!!)
+
+x=0		N. America (and all non-continental islands from GMT through GMT-12)
+x=1		Europe (and all non-continental islands from GMT through GMT+12)
+x=2		Asia
+x=3		Australia (and Antarctica, should it become necessary)
+x=4		S. America
+x=5		Africa
+
+3549:3xCCC	$CCC - $x
+
+y=0		No Export
+y=1		Prepend +1
+y=2		Prepend +2
+y=3		Prepend +3
+
+3549:801y	$y to AS 209 Qwest
+3549:803y	$y to AS 701 UUNet
+3549:806y	$y to AS 1239 Sprint
+3549:807y	$y to AS 1668 AOL
+3549:808y	$y to AS 2497 JPNIC
+3549:810y	$y to AS 2516 KDDI
+3549:811y	$y to AS 2548 ALGX (DIGEX)
+3549:812y	$y to AS 2914 Verio
+3549:813y	$y to AS 3300 InfoNet Europe
+3549:814y	$y to AS 3303 Swisscom
+3549:815y	$y to AS 3320 Deutsche Telekom
+3549:816y	$y to AS 3356 Level 3
+3549:817y	$y to AS 3561 C&W
+3549:819y	$y to AS 5511 France Telecom
+3549:820y	$y to AS 6461 AboveNet
+3549:821y	$y to AS 6453 Teleglobe
+3549:822y	$y to AS 7018 AT&T
+3549:823y	$y to AS 4134 ChinaNet
+
+
+#
+# Jippii Group / EUnet Finland Backbone AS
+# http://www.jippii.net/communities.shtml
+# last update: 27.06.2003
+#
+
+AS6667
+
+URL		http://www.jippii.net/communities.shtml
+
+6667:80		Set LOCAL_PREF to 80
+6667:90		Set LOCAL_PREF to 90
+6667:100	Set LOCAL_PREF to 100
+6667:110	Set LOCAL_PREF to 110
+
+x=0		Announce as is
+x=1		Announce with 6667 prepended to as-path
+x=2		Announce with 6667 6667 prepended to as-path
+x=3		Announce with 6667 6667 6667 prepended to as-path
+x=9		(default and takes precedence if present) Don't announce
+
+6667:200x	$x to all peers
+6667:201x	$x to peers in Helsinki Finland and at Ficix
+6667:202x	$x to peers in Stockholm Sweden and at Netnod (DGIX)
+6667:203x	$x to peers in London United Kingdom and as LINX
+6667:204x	$x to peers in Frankfurt Germany and at DECIX
+
+6667:90x	$x to all AS6667 customers
+6667:100x	$x to all transits
+6667:101x	$x to AS3356 Level3
+
+6667:3000	internal or customer
+6667:3001	public peering
+6667:3003	private peering
+6667:3004	transit
+
+6667:4000	Tampere Finland
+6667:4001	Turku Finland
+6667:4002	Helsinki Finland
+6667:4003	Stockholm Sweden
+6667:4004	London United Kingdom
+6667:4005	Frankfurt Germany
+
+
+#
+# PORT80
+# http://www.ripe.net/perl/whois?AS16150
+# last update: 02.07.2003
+#
+
+AS16150
+
+URL		http://www.ripe.net/perl/whois?AS16150
+
+16150:80	Announce to transits
+16150:81	Announce to transits prepend once
+16150:82	Announce to transits prepend twice
+
+16150:90	Announce to peers only
+16150:91	Announce to peers only prepend once
+16150:92	Announce to peers only prepend twice
