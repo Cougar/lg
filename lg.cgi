@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.15 2003/02/18 10:16:39 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.16 2003/03/04 13:52:31 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -687,6 +687,7 @@ sub print_results
 		} elsif ($command eq "show bgp ipv6 summary") {
 			s/^(.{15} 4\s+)(\d+)/($1 . as2link($2))/e;
 			if (/^([\dA-Fa-f]*:[\dA-Fa-f:]*)\s+4\s+/) {
+				$lastip = $1;
 				s/^([\dA-Fa-f:]+)(\s+.*\s+)([1-9]\d*)$/($1 . $2 . bgplink($3, "neighbors+${lastip}+routes"))/e;
 				s/^([\dA-Fa-f:]+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
 				$lastip = "";

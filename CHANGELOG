@@ -1,3 +1,7 @@
+04.03.2003	1.7p5
+	! link from "show bgp ipv6 summary" to
+	  "show bgp ipv6 neighbors x routes" fixed when summary used one line
+
 18.02.2003	1.7p4
 	! regexp fix for unwrapped IPv6 summary lines
 	! as2link fix for IPv6 address lines without AS numbers
