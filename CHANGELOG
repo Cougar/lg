@@ -1,3 +1,13 @@
+01.10.2003	1.8p1
+	! Juniper "show route" command changes
+	! Parser changes for Juniper output
+	+ timeout problem fix by DJL
+	+ new configuration option "TimeOut"
+
+02.07.2003	1.8
+	+ Community descriptions
+	! use Berkeley DB instead of plain text file (compile with makedb.pl)
+
 17.06.2003	1.7p7
 	! as2link parser fix - thanks to Rob Wise
 

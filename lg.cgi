@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.18 2003/06/17 09:39:26 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.21 2003/10/01 10:36:51 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -44,6 +44,7 @@ my $rshcmd;
 my $ipv4enabled;
 my $ipv6enabled;
 my $httpmethod = "POST";
+my $timeout;
 
 my %router_list;
 my @routers;
@@ -220,7 +221,14 @@ if ($query_cmd =~ /%s/) {
 	&print_warning("No parameter needed") if ($FORM{addr} ne "");
 }
 
-my %AS = &read_as_list($asfile);
+my %AS;
+if ($asfile =~ /\.db$/) {
+	use DB_File;
+	tie (%AS, 'DB_File', $asfile, O_RDONLY, 0644, $DB_HASH) or
+		print STDERR "Can\'t read AS database $asfile: $!\n";
+} else {
+	%AS = &read_as_list($asfile);
+}
 
 if ($ostypes{$FORM{router}} eq "junos") {
 	if ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+)$/) {
@@ -240,10 +248,10 @@ if ($ostypes{$FORM{router}} eq "junos") {
 		$command = "show route advertising-protocol bgp $1";
 	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+)$/) {
 		# show bgp <IP> ---> show route protocol bgp <IP> all
-		$command = "show route protocol bgp $1 all";
+		$command = "show route protocol bgp $1 detail";
 	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+) exact$/) {
-		# show bgp <IP> exact ---> show route protocol bgp <IP> all exact
-		$command = "show route protocol bgp $1 all exact";
+		# show bgp <IP> exact ---> show route protocol bgp <IP> exact detail
+		$command = "show route protocol bgp $1 detail";
 	} elsif ($command =~ /^show bgp re\s+(.*)$/) {
 		# show ip bgp re <regexp> ---> show route aspath-regex <regexp> all
 		my $re = $1;
@@ -304,10 +312,12 @@ sub xml_charparse {
 		$rshcmd = $str;
 	} elsif ($elem eq "httpmethod") {
 		$httpmethod = $str;
+	} elsif ($elem eq "timeout") {
+		$timeout = $str;
 	} elsif ($elem eq "separator") {
 		push @routers, "---- $str ----";
 	} else {
-		print "    C [$xml_current_router_name] [" . $xp->current_element . "] [$str]\n";    
+		print "<!--    C [$xml_current_router_name] [" . $xp->current_element . "] [$str] -->\n";
 	}
 }
 
@@ -338,6 +348,7 @@ sub xml_startparse {
 		    ($str2 ne "contactmail") &&
 		    ($str2 ne "rshcmd") &&
 		    ($str2 ne "httpmethod") &&
+		    ($str2 ne "timeout") &&
 		    ($str2 ne "router_list") &&
 		    ($str2 ne "argument_list")) {
 			die("Illegal configuration tag \"$str\" at line " . $xp->current_line . ", column " . $xp->current_column);
@@ -644,7 +655,11 @@ sub print_results
 			my ($prematch, $match) = $telnet->waitfor('/.*> $/');
 			$match =~ s/[^\d\w> ]/./g;
 			$telnet->prompt("/${match}/");
-			@output = $telnet->cmd("$command | no-more");
+			if ($timeout) {
+				@output = $telnet->cmd(String => "$command | no-more", Errmode => "return", Timeout => $timeout);
+			} else {
+				@output = $telnet->cmd("$command | no-more");
+			}
 		} elsif (($ostypes{$FORM{router}} eq "ios") || ($ostypes{$FORM{router}} eq "zebra")) {
 			if ($login ne "") {
 				$telnet->waitfor('/(ogin|name|word):.*$/');
@@ -659,7 +674,17 @@ sub print_results
 			my ($prematch, $match) = $telnet->waitfor('/.*>[ ]*$/');
 			$match =~ s/[^\d\w> ]/./g;
 			$telnet->prompt("/${match}/");
-			@output = $telnet->cmd("$command");
+			if ($timeout) {
+				@output = $telnet->cmd(String => "$command", Errmode => "return", Timeout => $timeout);
+			} else {
+				@output = $telnet->cmd("$command");
+			}
+		}
+		my $myerrmsg = $telnet->errmsg();
+		if ($myerrmsg =~ "command timed-out") {
+			@output = split (/\n/, ${$telnet->buffer});
+			shift (@output);	# remove command line
+			push (@output, "\n\n", $myerrmsg . "\n");
 		}
 		$telnet->print("quit");
 		$telnet->close;
@@ -737,6 +762,7 @@ sub print_results
 			s/^([\d\.\/]+)(\s+)/(bgplink($1, $1) . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
+			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "$2") . $3)/e;
 		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
 			s/^(.{30}[ ]{7})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
@@ -770,7 +796,13 @@ sub print_results
 			s/^(  )(Export)(: )/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/( )(Import)(: )/($1 . bgplink($2, "neighbors+$ip+routes+all") . $3)/e;
 		} elsif (($command =~ /^show route protocol bgp /i) || ($command =~ /^show route aspath-regex /i)) {
-			if (/^[\d\.A-Fa-f:\/\s]{19}([\*\+\- ])\[BGP\//) {
+			if (/^        (.)BGP    /) {
+				if ($1 eq "*") {
+					$best = "\#FF0000";
+				} else {
+					$best = "";
+				}
+			} elsif (/^[\d\.A-Fa-f:\/\s]{19}([\*\+\- ])\[BGP\//) {
 				if ($1 =~ /[\*\+]/) {
 					$best = "\#FF0000";
 				} elsif ($1 eq "-") {
@@ -783,7 +815,8 @@ sub print_results
 			}
 			$_ = "<FONT COLOR=\"${best}\">$_</FONT>" if ($best ne "");
 			s/( from )([0-9\.A-Fa-f:]+)/($1 . bgplink($2, "neighbors+$2"))/e;
-			$_ = as2link($_) if (/\s+AS path: \d+/);
+			s/(                Source: )([0-9\.A-Fa-f:]+)/($1 . bgplink($2, "neighbors+$2"))/e;
+			s/(\s+AS path: )(\d+)/($1 . as2link($2))/e;
 			s/^(<FONT COLOR=\"#FF0000\">)?([\dA-Fa-f:]+[\d\.A-Fa-f:\/]+)(\s*)/("$1<B>" . bgplink($2, "$2+exact") . "<\/B>$3")/e;
 		} elsif ($command =~ /bgp/) {
 			s|^(BGP routing table entry for) (\S+)|$1 <B>$2</B>|;
@@ -801,6 +834,8 @@ sub print_results
 			}
 			$_ = "<FONT COLOR=\"\#FF0000\">$_</FONT>" if $best && $best == $count;
 			s/( from )([0-9\.A-Fa-f:]+)( )/($1 . bgplink($2, "neighbors+$2") . $3)/e;
+			s/(Community: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(Communities: )([\d: ]+)/($1 . community2link($2))/e;
 		} elsif ($command =~ /^trace/i) {
 			s/(\[AS\s+)(\d+)(\])/($1 . as2link($2) . $3)/e;
 		}
@@ -904,7 +939,38 @@ sub as2link {
 		}
 		$line .= $rep . $sep;
 	}
+	$suffix =~ s/(aggregated by )(\d+)( )/($1 . as2link($2) . $3)/e;
 	return($prefix . $line . $suffix);
+}
+
+sub community2link {
+	my ($line) = @_;
+
+	my $prefix;
+	my $suffix;
+	my @communitylist = split(/[^\d:]+/, $line);
+	my @separators = split(/[\d:]+/, $line);
+	$line = "";
+	for (my $i = 0; $i <= $#communitylist; $i++) {
+		my $community = $communitylist[$i];
+		my $sep = "";
+		$sep = $separators[$i + 1] if ($i <= $#separators);
+		my $rep;
+		if (! defined $AS{$community}) {
+			$rep = $community;
+		} else {
+			my $link = "";
+			my $descr = $AS{$community};
+			my $asnum = $1 if ($community =~ /^(\d+):/);
+			if (defined $AS{$asnum . ":URL"}) {
+				$rep = "<A HREF=\"" . $AS{$asnum . ":URL"} . "\" TARGET=_lookup>$community</A> ($descr)";
+			} else {
+				$rep = "$community ($descr)";
+			}
+		}
+		$line .= $rep . $sep;
+	}
+	return($line);
 }
 
 sub bgplink {
