@@ -31,7 +31,7 @@ use Net::SSH::Perl;
 use Net::SSH::Perl::Cipher;
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.12 2002/12/29 18:17:17 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.13 2003/01/17 21:47:24 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -707,33 +707,25 @@ sub print_results
 				s/^(  [^:]+: )(\d+)\/(\d+)\/(\d+)$/($1 . bgplink($2, "neighbors+${lastip}+routes") . "\/" . bgplink($3, "neighbors+${lastip}+routes+all") . "\/" . bgplink($4, "neighbors+${lastip}+routes+damping+suppressed"))/e;
 				$lastip = "";
 			}
-		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ ro/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ](&gt;|d|h| )[i ])([\d\.\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
-			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ ro/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
+		} elsif (($command =~ /^show ip bgp\s+n\w*\s+[\d\.]+\s+(ro|a)/i) ||
+		         ($command =~ /^show bgp ipv6\s+n\w*\s+[\dA-Fa-f:]+\s+(ro|a)/i) ||
+		         ($command =~ /^show ip bgp\s+re/i) ||
+		         ($command =~ /^show bgp ipv6\s+re/i) ||
+		         ($command =~ /^show ip bgp\s+[\d\.]+\s+[\d\.]+\s+(l|s)/i)) {
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ](&gt;|d|h| )[i ])([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
+			s/^([\*r ](&gt;|d|h| )[i ])([\d\.A-Fa-f:\/]+)$/($1 . bgplink($3, $3))/e;
+			s/^(( ){20}.{41})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show route receive-protocol bgp\s+[\d\.A-Fa-f:]+/i) {
-			s/^([\d\.\s].{64})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\d\.\s].{64})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
 			s/^([\d\.\s].{24})([\d\.]+)(\s+)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 			s/^([\d\.\/]+)(\s+)/(bgplink($1, $1) . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
-		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ a/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
-			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ a/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
-			s/^(.{30}[ ]{7})([\d\s]+)([I\?])$/($1 . as2link($2) . $3)/e;
+			s/^(.{30}[ ]{7})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) {
 			my $ip = $1;
 			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
@@ -760,16 +752,6 @@ sub print_results
 			s/^(    Suppressed due to damping:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes+damping+suppressed"))/e;
 			s/^(  )(Export)(: )/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/( )(Import)(: )/($1 . bgplink($2, "neighbors+$ip+routes+all") . $3)/e;
-		} elsif ($command =~ /^show ip bgp re/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\d\.\/]+)$/($1 . $2 . $3 . bgplink($4, $4))/e;
-			s/^(( ){20}.{41})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-		} elsif ($command =~ /^show bgp ipv6 re/i) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s]+)([ie\?])$/($1 . as2link($3) . $4)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)(\s+)/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
-			s/^([\*r ])(&gt;|d|h| )([i ])([\dA-Fa-f:\/]+)$/($1 . $2 . $3 . bgplink($4, $4) . $5)/e;
 		} elsif (($command =~ /^show route protocol bgp /i) || ($command =~ /^show route aspath-regex /i)) {
 			if (/^[\d\.A-Fa-f:\/\s]{19}([\*\+\- ])\[BGP\//) {
 				if ($1 =~ /[\*\+]/) {
@@ -874,22 +856,35 @@ sub read_as_list {
 sub as2link {
 	my ($line) = @_;
 
-	my @aslist = split(/[ ,]+/, $line);
-	my %ases;
-	for my $as (@aslist) {
-		$ases{$as} ++ if (defined $AS{$as});;
+	my $prefix;
+	my $suffix;
+	if ($line =~ /^([^\d]*)([\d\s]*\d)([^\d]*)$/) {
+		$prefix = $1;
+		$line = $2;
+		$suffix = $3;
 	}
-	for my $as (keys %ases) {
-		my $link = "";
-		if (($AS{$as} =~ /(\w+):/) && (defined $whois{$1})) {
-			$link = sprintf(" HREF=\"$whois{$1}\" TARGET=_lookup", $as);
+	my @aslist = split(/[^\d]+/, $line);
+	my @separators = split(/[\d]+/, $line);
+	$line = "";
+	for (my $i = 0; $i <= $#aslist; $i++) {
+		my $as = $aslist[$i];
+		my $sep = "";
+		$sep = $separators[$i + 1] if ($i <= $#separators);
+		my $rep;
+		if (! defined $AS{$as}) {
+			$rep = $as;
+		} else {
+			my $link = "";
+			if (($AS{$as} =~ /(\w+):/) && (defined $whois{$1})) {
+				$link = sprintf(" HREF=\"$whois{$1}\" TARGET=_lookup", $as);
+			}
+			my $descr = $AS{$as};
+			$descr = "$2 ($1)" if ($descr =~ /^([^:]+):(.*)$/);
+			$rep = "<A onMouseOver=\"window.status='$descr'; return true\"${link}>$as</A>";
 		}
-		my $descr = $AS{$as};
-		$descr = "$2 ($1)" if ($descr =~ /^([^:]+):(.*)$/);
-		my $rep = "<A onMouseOver=\"window.status='$descr'; return true\"${link}>$as</A>";
-		$line =~ s/\b$as\b/$rep/g;
+		$line .= $rep . $sep;
 	}
-	return($line);
+	return($prefix . $line . $suffix);
 }
 
 sub bgplink {

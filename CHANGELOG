@@ -1,3 +1,7 @@
+17.01.2003	1.7p3
+	! one parser for all Cisco/Zebra BGP route table output
+	! new as2link(). {AS1,AS2} type lines are also OK now (what are they mean?)
+
 29.12.2002	1.7p2
 	! output parser fix for damped, history and RIB-failure prefixes
 	! wrapped lines are displayed now correctly
