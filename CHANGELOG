@@ -1,3 +1,15 @@
+07.11.2004	1.8p3
+	! HTML is valid HTML 4.01 Transitional now
+
+05.11.2004
+	- traceroute wait removed to make command shorter. problem with cmdline scrolling. telnet module needs changes to accept that ;-(
+	! APNIC whois search page link updated
+	+ show all routes when exact was asked in JunOS
+	- prompt wait in ios code removed. there was sometimes problems with that
+	! BGP neighbor "ping" link instead of loop to the same screen
+	! parser improvements for "show ip bgp neighbor" and "show route protocol bgp .* terse"
+	! load libraries only if needed - thanks to Marco d'Itri
+
 15.06.2004	1.8p2
 	! JunOS traceroute does not support AS lookup yet
 	+ some parser improvements
