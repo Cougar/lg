@@ -28,15 +28,17 @@ use IO::Handle;
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.5 2002/06/25 14:38:19 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.6 2002/07/16 07:41:21 cougar Exp $';
 
 my $lgurl;
 my $logfile;
 my $asfile;
 my $logoimage;
 my $title;
+my $favicon;
 my $email;
 my $rshcmd;
+my $ipv6enabled;
 
 my %router_list;
 my @routers;
@@ -159,7 +161,7 @@ if ($valid_ipv4_query{$FORM{query}} =~ /%s/) {
 	&print_warning("No parameter needed") if ($FORM{addr} ne "");
 }
 
-my %AS = &read_as_list("AS", $asfile);
+my %AS = &read_as_list($asfile);
 
 &print_results($router_list{$FORM{router}}, $command);
 
@@ -202,6 +204,8 @@ sub xml_charparse {
 		$logoimage = $str;
 	} elsif ($elem eq "htmltitle") {
 		$title = $str;
+	} elsif ($elem eq "favicon") {
+		$favicon = $str;
 	} elsif ($elem eq "contactmail") {
 		$email = $str;
 	} elsif ($elem eq "rshcmd") {
@@ -227,6 +231,7 @@ sub xml_startparse {
 		    ($str2 ne "aslist") &&
 		    ($str2 ne "logoimage") &&
 		    ($str2 ne "htmltitle") &&
+		    ($str2 ne "favicon") &&
 		    ($str2 ne "contactmail") &&
 		    ($str2 ne "rshcmd") &&
 		    ($str2 ne "router_list") &&
@@ -241,6 +246,10 @@ sub xml_startparse {
 				} elsif (lc($attrval[$i]) eq "default") {
 					if (lc($attrval[$i+1]) eq "yes") {
 						$default_router = $xml_current_router_name;
+					}
+				} elsif (lc($attrval[$i]) eq "enableipv6") {
+					if (lc($attrval[$i+1]) eq "yes") {
+						$ipv6enabled++;
 					}
 				}
 			}
@@ -319,6 +328,9 @@ sub print_head {
 	} else {
 		print "<Title>$title</Title>\n";
 	}
+	if ($favicon ne "") {
+		print "<LINK REL=\"shortcut icon\" HREF=\"${favicon}\">\n";
+	}
 	print "</Head>\n";
 	print "<Body bgcolor=\"#FFFFFF\" text=\"#000000\">\n";
 	print "<Img Src=\"$logoimage\">\n" if ($logoimage ne "");
@@ -345,15 +357,25 @@ sub print_form {
 <th bgcolor="#000000" nowrap><font color="#FFFFFF">Additional parameters</font></th>
 <th bgcolor="#000000" nowrap><font color="#FFFFFF">Node</font></th></tr>
 <tr><td>
-<Input type="radio" name="query" value="bgp">&nbsp;bgp<br>
-<Input type="radio" name="query" value="advertised-routes">&nbsp;bgp&nbsp;advertised-routes<br>
-<Input type="radio" name="query" value="summary">&nbsp;bgp&nbsp;summary<br>
-<Input type="radio" name="query" value="ping">&nbsp;ping<br>
-<Input type="radio" name="query" value="trace" SELECTED>&nbsp;trace<br>
-<Select Name="protocol">
+<table border=0 cellpading=2 cellspacing=2>
+<tr><td><Input type="radio" name="query" value="bgp"></td><td>&nbsp;bgp</td></tr>
+<tr><td><Input type="radio" name="query" value="advertised-routes"></td><td>&nbsp;bgp&nbsp;advertised-routes</td></tr>
+<tr><td><Input type="radio" name="query" value="summary"></td><td>&nbsp;bgp&nbsp;summary</td></tr>
+<tr><td><Input type="radio" name="query" value="ping"></td><td>&nbsp;ping</td></tr>
+<tr><td><Input type="radio" name="query" value="trace" SELECTED></td><td>&nbsp;trace</td></tr>
+EOT
+	if ($ipv6enabled) {
+		print <<EOT;
+<tr><td></td><td><Select Name="protocol">
 <Option Value = \"IPv4\"> IPv4
 <Option Value = \"IPv6\"> IPv6
-</Select>
+</Select></td></tr>
+</table>
+EOT
+	} else {
+		print "</table>\n<Input type=\"hidden\" name=\"protocol\"value=\"IPv4\">\n";
+	}
+	print <<EOT;
 </td>
 <td align=center>&nbsp;<br><Input Name="addr" size=30><br><font size=-1>&nbsp;<sup>&nbsp;</sup>&nbsp;</font></td>
 <td>&nbsp;<br><Select Name="router">
@@ -454,7 +476,7 @@ sub print_results
 	print "<B>Host:</B> $host\n";
 	print "<BR>\n";
 	print "<B>Command:</B> $command\n";
-	print "<P><Pre>\n";
+	print "<P><Pre><tt>\n";
 	if ($method eq "rsh") {
 		open(P, "$rshcmd $host $command |");
 	} elsif ($method =~ /^telnet(.*)/) {
@@ -479,6 +501,7 @@ sub print_results
 	}
 	my $header = 1;
 	my $linecache = "";
+	my $lastip = "";
 	while (! (P->eof)) {
 		if ($method =~ /^telnet/) {
 			my $last_char = P->getc;
@@ -513,27 +536,52 @@ sub print_results
 			s/^(\d+\.\d+\.\d+\.\d+)(\s+)/(bgplink($1, "neighbors+$1") . $2)/e;
 		} elsif ($command eq "show bgp ipv6 summary") {
 			s/^(                4\s+)(\d+)/($1 . as2link($2))/e;
+			if (/^([\dA-Fa-f:]+)$/) {
+				$lastip = $1;
+				s/^([\dA-Fa-f:]+)$/bgplink($1, "neighbors+$1")/e;
+			}
+			if (($lastip ne "") && (/^(\s+.*\s+)([1-9]\d*)$/)) {
+				s/^(\s+.*\s+)([1-9]\d*)$/($1 . bgplink($2, "neighbors+${lastip}+routes"))/e;
+				$lastip = "";
+			}
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ ro/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
 			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\da-f:]+ ro/i) {
+			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2) . $3)/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+[\d\.]+ a/i) {
 			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
 			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+		} elsif ($command =~ /^show bgp ipv6 n\w*\s+[\dA-Fa-f:]+ a/i) {
+			s/^(.{61})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2))/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
 		} elsif ($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) {
 			my $ip = $1;
 			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/(prefixes )(received)( \d+)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+			s/ (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
 			s/^(  \d+ )(accepted)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-		} elsif (($command =~ /^show ip bgp re/i) ||
-		         ($command =~ /^show ip bgp n/i)) {
-			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
+			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+		} elsif ($command =~ /^show bgp ipv6 n\w*\s+([\da-f:]+)/i) {
+			my $ip = $1;
+			s/(Prefix )(advertised)( \d+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
+			s/^  (\d+)( accepted prefixes)/(bgplink($1, "neighbors+$ip+routes") . $2)/e;
+			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-		} elsif (($command =~ /^show bgp ipv6 re/i) ||
-		         ($command =~ /^show bgp ipv6 n/i)) {
-			s/^(.{61})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
-			s/( AS )(\d+)(,)/($1 . as2link($2) . $3)/ge;
+			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+		} elsif ($command =~ /^show ip bgp re/i) {
+			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\* ][> ][i ])([\d\.\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+		} elsif ($command =~ /^show bgp ipv6 re/i) {
+			s/^(.{59})([\d\s]+)([ie\?])$/($1 . as2link($2) . $3)/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
+			s/^([\* ][> ][i ])([\dA-Fa-f:\/]+)$/($1 . bgplink($2, $2) . $3)/e;
 		} elsif ($command =~ /bgp/) {
 			s|^(BGP routing table entry for) (\S+)|$1 <B>$2</B>|;
 			s|^(Paths:\ .*)\ best\ \#(\d+)
@@ -549,14 +597,14 @@ sub print_results
 				$_ = as2link($_);
 			}
 			$_ = "<FONT COLOR=\"\#FF0000\">$_</FONT>" if $best && $best == $count;
-			s/( from )([0-9\.]+)( )/($1 . bgplink($2, "neighbors+$2") . $3)/e;
+			s/( from )([0-9\.A-Fa-f:]+)( )/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 		} elsif ($command =~ /^trace/i) {
 			s/(\[AS )(\d+)(\])/($1 . as2link($2) . $3)/e;
 		}
 		print "$_\n";
 	}
 	close(P);
-	print "</Pre>\n";
+	print "</tt></Pre>\n";
 }
 
 ######## The rest is borrowed from NCSA WebMonitor "mail" code 
@@ -591,14 +639,25 @@ sub cgi_decode {
 }
 
 sub read_as_list {
-	my ($ref, $fn) = @_;
+	my ($fn) = @_;
 
 	local *F;
 	my %AS;
 
-	open(F, $fn) || die "Can't read AS list from $fn: $!";
+	if (! open(F, $fn)) {
+		print "<!-- Can't read AS list from $fn: $! -->\n";
+		return;
+	}
 	while (<F>) {
 		chop;
+		if (/^#include\s+(.+)$/) {
+			my %AS2 = &read_as_list($1);
+			foreach my $key (keys (%AS2)) {
+				$AS{$key} = $AS2{$key};
+			}
+			undef %AS2;
+			next;
+		}
 		next if (/^$/ || /^\s*#/);
 		my ($asnum, $descr) = split /\t+/;
 		$asnum =~ s/^[^\d]*(\d+)[^\d]*$/$1/;

@@ -1,0 +1,36 @@
+16.07.2002	1.6
+	+ Favicon support
+	+ Perl script for downloading AS num data from RIPE/ARIN/APNIC
+	! new IPv6 configuration option
+	! improved hyperlinking between different IPv6 BGP screens
+	! new router-servers and one new IPv6 LG
+
+
+25.06.2002	1.5	Major feature enhancements
+	! RIPE whois link update
+	+ HTTPS method
+	+ configuration option for default router selection
+	+ separators in router list
+	! improved hyperlinking between different BGP screens
+	! other small fixes
+
+
+28.05.2002	1.4	The first public release, initial freshmeat announcement
+	+ IPv6 support
+	+ XML configuration file
+	! other small fixes and changes
+
+
+17.05.2001	1.3
+	small configuration change
+
+
+19.03.2001	1.2
+	A lot of changes. More complex configuration file. Telnet support
+
+
+26.02.2000	1.1
+	The first version of LG in CVS
+	It supports remote LG sites with the same variable names
+	The design is mainly borrowed from KPNQwest LG
+	(http://stats.kpni.net/cgi-bin/lg.pl)

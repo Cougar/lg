@@ -1,3 +1,11 @@
+#include as-arin.txt
+#include as-apnic.txt
+#include as-ripe.txt
+
+#
+# these lines owerwrites previous records and therefore not really necessary
+#
+
     1	ARIN:BBN Planet
    22	ARIN:Naval Ocean Systems Center
   109	ARIN:Cisco Systems, Inc.
@@ -39,6 +47,7 @@
  1755	ARIN:Ebone Consortium
  1759	RIPE:Sonera Corporation Eu Transit AS
  1930	ARIN:Portuguese Academic and Research Network
+ 2110	RIPE:Esat Net backbone AS (EUnet Ireland / IEUnet)
  2116	RIPE:KPNQwest Norway
  2380	RIPE:ESTNET (EsData)
  2497	ARIN:Japan Network Information Center
@@ -167,6 +176,7 @@
  5409	RIPE:Jippii (Deutschland) GmbH
  5413	RIPE:XO Communications European AS
  5459	RIPE:London Internet Exchange Ltd. (LINX)
+ 5479	RIPE:Universities Network in Vilnius (LITNET)
  5515	RIPE:Sonera Finland
  5518	RIPE:Telia Latvija
  5538	RIPE:LATNET (commercial subnet)
@@ -211,6 +221,7 @@
  8197	RIPE:NeoNet
  8206	RIPE:JUNIKNET
  8210	RIPE:Nextbone - Nextra's international backbone (TELENOR)
+ 8220	RIPE:COLT Internet - International Backbone
  8240	RIPE:ASO
  8269	RIPE:Global One Portugal
  8277	RIPE:EuroNet - BE (Wanadoo Belgium)
@@ -260,10 +271,12 @@
 13272	RIPE:ComTrade
 14277	RIPE:Nokia
 15169	ARIN:Google
+15440	RIPE:MicroLink Data (Lithuania)
 15684	RIPE:OptiCom
 15721	RIPE:C.T.CO. Ltd
 15775	RIPE:Latvijas Dzelzcels - Latvian railroad company
 15827	RIPE:School of Business Administration Turiba
+15911	RIPE:Lithuanian Parliament
 16014	RIPE:Estonian Mobile Telephone Company Ltd.
 16062	RIPE:Talks Ltd.
 16279	RIPE:Parex Bank AS
@@ -285,3 +298,6 @@
 20548	RIPE:Saeima (Parlament) of Republic of LATVIA
 20834	RIPE:Caladan Communications Ltd
 20861	RIPE:ICL invia AB
+21061	RIPE:Telekomunikaciju grupa Ltd.
+21412	RIPE:UAB Kabeliniai Rysiu Tinklai
+24645	RIPE:Informacijos Tiltas Ltd.
