@@ -1,8 +1,12 @@
-01.10.2003	1.8p1
-	! Juniper "show route" command changes
-	! Parser changes for Juniper output
-	+ timeout problem fix by DJL
-	+ new configuration option "TimeOut"
+15.06.2004	1.8p2
+	! JunOS traceroute does not support AS lookup yet
+	+ some parser improvements
+	! APNIC db location change
+	+ JPNIC, LACNIC (country only)
+	! use SixXS whois for unknown AS
+
+17.01.2004	1.8p1
+	+ different port for zebra ping and traceroute commands
 
 02.07.2003	1.8
 	+ Community descriptions

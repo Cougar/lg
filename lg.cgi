@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.21 2003/10/01 10:36:51 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.25 2004/06/15 14:24:02 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -93,12 +93,17 @@ my %valid_query = (
 			}
 		},
 	"junos"		=>	{
+		"ipv4"			=>	{
+			"trace"			=>	"traceroute wait 2 %s as-number-lookup"
+			},
+		"ipv6"		=>	{
+			"trace"			=>	"traceroute wait 2 %s"
+			},
 		"ipv46"			=>	{
 			"bgp"			=>	"show bgp %s",
-			"advertised-routes"	=>	"show route advertising-protocol bgp %s",
+			"advertised-routes"	=>	"show route advertising-protocol bgp %s %s",
 			"summary"		=>	"show bgp summary",
-			"ping"			=>	"ping count 5 %s",
-			"trace"			=>	"traceroute %s as-number-lookup"
+			"ping"			=>	"ping count 5 %s"
 			}
 		}
 );
@@ -107,6 +112,7 @@ my %whois = (
 	"RIPE"		=>	"http://www.ripe.net/perl/whois?AS%s",
 	"ARIN"		=>	"http://www.arin.net/cgi-bin/whois.pl?queryinput=%s",
 	"APNIC"		=>	"http://www.apnic.net/apnic-bin/whois.pl?search=AS%s",
+	"default"	=>	"http://www.sixxs.net/tools/whois/?AS%s"
 );
 
 $| = 1;
@@ -205,7 +211,7 @@ close LOG;
 
 if ($FORM{addr} !~ /^[\w\.\^\$\-\/ ]*$/) {
 	if ($FORM{addr} =~ /^[\w\.\^\$\-\:\/ ]*$/) {
-		if ($FORM{protocol} ne "IPv6") {
+		if (($FORM{protocol} ne "IPv6") && ($ostypes{$FORM{router}} ne "junos")){
 			&print_error("ERROR: IPv6 address for IPv4 query");
 		}
 	} else {
@@ -243,15 +249,25 @@ if ($ostypes{$FORM{router}} eq "junos") {
 	} elsif ($command =~ /^show bgp neighbors ([\d\.A-Fa-f:]+) routes damping suppressed$/) {
 		# show bgp neighbors <IP> routes damping suppressed ---> show route receive-protocol bgp <IP> damping suppressed
 		$command = "show route receive-protocol bgp $1 damping suppressed";
-	} elsif ($command =~ /show bgp n\w*\s+([\d\.A-Fa-f:]+) a[\w\-]*$/) {
+	} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+) advertised-routes ([\d\.A-Fa-f:\/]+)$/) {
+		# show ip bgp n.. <IP> advertised-routes <prefix> ---> show route advertising-protocol bgp <IP> <prefix> exact detail
+		$command = "show route advertising-protocol bgp $1 $2 exact detail";
+	} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+) receive-protocol ([\d\.A-Fa-f:\/]+)$/) {
+		# show ip bgp n.. <IP> receive-protocol <prefix> ---> show route receive-protocol bgp <IP> <prefix> exact detail
+		$command = "show route receive-protocol bgp $1 $2 exact detail";
+	} elsif ($command =~ /^show bgp n\w*\s+([\d\.A-Fa-f:]+) a[\w\-]*$/) {
 		# show ip bgp n.. <IP> a.. ---> show route advertising-protocol bgp <IP>
 		$command = "show route advertising-protocol bgp $1";
-	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+)$/) {
+
+	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:]+\/\d+)$/) {
+		# show bgp <IP>/mask ---> show route protocol bgp <IP> all
+		$command = "show route protocol bgp $1 terse exact";
+	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:]+)$/) {
 		# show bgp <IP> ---> show route protocol bgp <IP> all
-		$command = "show route protocol bgp $1 detail";
+		$command = "show route protocol bgp $1 terse";
 	} elsif ($command =~ /^show bgp\s+([\d\.A-Fa-f:\/]+) exact$/) {
 		# show bgp <IP> exact ---> show route protocol bgp <IP> exact detail
-		$command = "show route protocol bgp $1 detail";
+		$command = "show route protocol bgp $1 exact detail";
 	} elsif ($command =~ /^show bgp re\s+(.*)$/) {
 		# show ip bgp re <regexp> ---> show route aspath-regex <regexp> all
 		my $re = $1;
@@ -510,7 +526,7 @@ EOT
 	print <<EOT;
 </td>
 <td align=center>&nbsp;<br><Input Name="addr" size=30><br><font size=-1>&nbsp;<sup>&nbsp;</sup>&nbsp;</font></td>
-<td>&nbsp;<br><Select Name="router">
+<td align=right>&nbsp;<br><Select Name="router">
 EOT
 	my $remotelg = 0;
 	for (my $i = 0; $i <= $#routers; $i++) {
@@ -521,7 +537,11 @@ EOT
 		}
 		my $descr = "";
 		my $default = "";
-		if ($router eq $default_router) {
+		if ($FORM{router} ne "") {
+			if ($router eq $FORM{router}) {
+				$default = " selected";
+			}
+		} elsif ($router eq $default_router) {
 			$default = " selected";
 		}
 		if (defined $namemap{$router}) {
@@ -614,10 +634,10 @@ sub print_results
 	my $password = $5;
 	$host = $6;
 	my $port;
-	if ($host =~ /^\[(.+)\](:(\d+))?$/) {
+	if ($host =~ /^\[(.+)\](:([\d,]+))?$/) {
 		$host = $1;
 		$port = $3;
-	} elsif ($host =~ /^([^:]+)(:(\d+))?$/) {
+	} elsif ($host =~ /^([^:]+)(:([\d,]+))?$/) {
 		$host = $1;
 		$port = $3;
 	} else {
@@ -641,6 +661,15 @@ sub print_results
 		@output = split (/\n/, $out);
 	} elsif ($scheme eq "telnet") {
 		use Net::Telnet ();
+		if ($ostypes{$FORM{router}} eq "zebra") {
+			if (($command =~ /^ping /) || ($command =~ /^traceroute /)) {
+				$port = $1 if ($port =~ /^(\d+),\d*$/);
+				$port = 2601 if ($port eq "");
+			} else {
+				$port = $1 if ($port =~ /^\d*,(\d+)$/);
+				$port = 2605 if ($port eq "");
+			}
+		}
 		$port = 23 if ($port eq "");
 		$telnet = new Net::Telnet;
 		$telnet->open(Host => $host,
@@ -756,16 +785,24 @@ sub print_results
 			s/^([\*r ](&gt;|d|h| )[i ])([\d\.A-Fa-f:\/]+)$/($1 . bgplink($3, $3))/e;
 			s/^(( ){20}.{41})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3) . $4)/e;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
-		} elsif ($command =~ /^show route receive-protocol bgp\s+[\d\.A-Fa-f:]+/i) {
+		} elsif ($command =~ /^show route receive-protocol bgp\s+([\d\.A-Fa-f:]+)/i) {
+			my $ip = $1;
+			s/(Community: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(Communities: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(^\s+AS path: )([\d ]+)/($1 . as2link($2))/e;
+			s/^([\d\.\s].{24})([\d\.]+)(\s+)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
+			s/^([\d\.\/]+)(\s+)/(bgplink($1, $1) . $2)/e;
+			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
+			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
+			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "neighbors+$ip+receive-protocol+$2") . $3)/e;
+		} elsif ($command =~ /^show route advertising-protocol bgp\s+([\d\.A-Fa-f:]+)$/i) {
+			my $ip = $1;
 			s/^([\d\.\s].{64})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
 			s/^([\d\.\s].{24})([\d\.]+)(\s+)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 			s/^([\d\.\/]+)(\s+)/(bgplink($1, $1) . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)(\s+)/(bgplink($1, "$1+exact") . $2)/e;
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
-			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "$2") . $3)/e;
-		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
-			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
-			s/^(.{30}[ ]{7})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
+			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "neighbors+$ip+advertised-routes+$2") . $3)/e;
 		} elsif (($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) ||
 		         ($command =~ /^show ip bgp n\w*$/i)) {
 			$lastip = $1 if ($1 ne "");
@@ -795,6 +832,9 @@ sub print_results
 			s/^(    Suppressed due to damping:\s+)(\d+)/($1 . bgplink($2, "neighbors+$ip+routes+damping+suppressed"))/e;
 			s/^(  )(Export)(: )/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
 			s/( )(Import)(: )/($1 . bgplink($2, "neighbors+$ip+routes+all") . $3)/e;
+		} elsif ($command =~ /^show route protocol bgp .* terse/i) {
+			s/^(.{20} B .{25} &gt;.{15} )([\d\s,\{\}]+)(.*)$/($1 . as2link($2) . $3)/e;
+			s/^([\* ] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "$2+exact") . $3)/e;
 		} elsif (($command =~ /^show route protocol bgp /i) || ($command =~ /^show route aspath-regex /i)) {
 			if (/^        (.)BGP    /) {
 				if ($1 eq "*") {
@@ -813,11 +853,14 @@ sub print_results
 			} elsif (/^$/) {
 				$best = "";
 			}
-			$_ = "<FONT COLOR=\"${best}\">$_</FONT>" if ($best ne "");
 			s/( from )([0-9\.A-Fa-f:]+)/($1 . bgplink($2, "neighbors+$2"))/e;
 			s/(                Source: )([0-9\.A-Fa-f:]+)/($1 . bgplink($2, "neighbors+$2"))/e;
-			s/(\s+AS path: )(\d+)/($1 . as2link($2))/e;
-			s/^(<FONT COLOR=\"#FF0000\">)?([\dA-Fa-f:]+[\d\.A-Fa-f:\/]+)(\s*)/("$1<B>" . bgplink($2, "$2+exact") . "<\/B>$3")/e;
+			s/(\s+AS: )([\d ]+)/($1 . as2link($2))/eg;
+			s/(Community: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(Communities: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(^\s+AS path: )([\d ]+)/($1 . as2link($2))/e;
+			s/^([\dA-Fa-f:]+[\d\.A-Fa-f:\/]+)(\s*)/("<B>" . bgplink($1, "$1+exact") . "<\/B>$2")/e;
+			$_ = "<FONT COLOR=\"${best}\">$_</FONT>" if ($best ne "");
 		} elsif ($command =~ /bgp/) {
 			s|^(BGP routing table entry for) (\S+)|$1 <B>$2</B>|;
 			s|^(Paths:\ .*)\ best\ \#(\d+)
@@ -836,6 +879,7 @@ sub print_results
 			s/( from )([0-9\.A-Fa-f:]+)( )/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 			s/(Community: )([\d: ]+)/($1 . community2link($2))/e;
 			s/(Communities: )([\d: ]+)/($1 . community2link($2))/e;
+			s/(^\s+AS path: )([\d ]+)/($1 . as2link($2))/e;
 		} elsif ($command =~ /^trace/i) {
 			s/(\[AS\s+)(\d+)(\])/($1 . as2link($2) . $3)/e;
 		}
@@ -930,8 +974,12 @@ sub as2link {
 			$rep = $as;
 		} else {
 			my $link = "";
-			if (($AS{$as} =~ /(\w+):/) && (defined $whois{$1})) {
-				$link = sprintf(" HREF=\"$whois{$1}\" TARGET=_lookup", $as);
+			if ($AS{$as} =~ /(\w+):/) {
+				if (defined $whois{$1}) {
+					$link = sprintf(" HREF=\"$whois{$1}\" TARGET=_lookup", $as);
+				} elsif (defined $whois{default}) {
+					$link = sprintf(" HREF=\"$whois{default}\" TARGET=_lookup", $as);
+				}
 			}
 			my $descr = $AS{$as};
 			$descr = "$2 ($1)" if ($descr =~ /^([^:]+):(.*)$/);

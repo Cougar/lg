@@ -9,6 +9,8 @@ my $dbfile = "as.db";
 my %GLOBALVAR;
 my %LOCALVAR;
 my %COMMUNITY;
+my %ANYNUM = ("0=0" => "", "1=1" => "", "2=2" => "", "3=3" => "", "4=4" => "",
+              "5=5" => "", "6=6" => "", "7=7" => "", "8=8" => "", "9=9" => "");
 
 my %AS;
 
@@ -114,7 +116,7 @@ sub read_community_list {
 			$COMMUNITY{$asnum . ":URL"} = $descr;
 			next;
 		}
-		if ($community =~ /^(\d+):(\d*)([a-zA-Z].*)$/) {
+		if ($community =~ /^(\d+):(\d*)([a-zA-Z\.].*)$/) {
 			&complete_community($community, $descr, %LOCALVAR);
 			next;
 		}
@@ -133,9 +135,10 @@ sub complete_community {
 	}
 
 	my @clist;
-	if ($community =~ /^\d+:\d*([a-zA-Z]).*$/) {
+	if ($community =~ /^\d+:\d*([a-zA-Z\.]).*$/) {
 		my $var1 = $1;
-		$community =~ /^(\d+):(\d*)(($var1)+)(.*)$/;
+		$var1 .= "+" if ($var1 ne ".");
+		$community =~ /^(\d+):(\d*)(($var1))(.*)$/;
 		my $asnum = $1;
 		my $commpref = $2;
 		my $commvar = $3;
@@ -146,18 +149,21 @@ sub complete_community {
 			$varref = \%GLOBALVAR;
 		} elsif ($commvar =~ /^[a-z]+$/) {
 			$varref = \%LOCALVAR;
+		} elsif ($commvar eq ".") {
+			$varref = \%ANYNUM;
 		} else {
 			die "Illegal community variable \"$commvar\" in \"$community\"";
 		}
 
 		my $c = 0;
-		foreach my $key (keys (%{$varref})) {
+		foreach my $key (sort keys (%{$varref})) {
 			if ($key !~ /^($commvar)=(.+)$/) {
 				next;
 			}
 			my $repl = $2;
 			my $newcomm = $asnum . ":" . $commpref . $repl . $commsuf;
 			my $descr2 = ${$varref}{$key};
+			$descr2 = $key if ($commvar eq ".");
 			(my $newdescr = $descr) =~ s/(\$$commvar)/$descr2/g;
 			&complete_community($newcomm, $newdescr);
 			$c++;
