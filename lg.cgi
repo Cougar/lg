@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.16 2003/03/04 13:52:31 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.17 2003/05/20 06:23:19 cougar Exp $';
 
 my $default_ostype = "IOS";
 
@@ -202,8 +202,14 @@ close LOG;
 
 &print_head($command);
 
-if ($FORM{addr} !~ /^[\w\.\^\$\-\:\/ ]*$/) {
-	&print_error("Illegal characters in parameter string");
+if ($FORM{addr} !~ /^[\w\.\^\$\-\/ ]*$/) {
+	if ($FORM{addr} =~ /^[\w\.\^\$\-\:\/ ]*$/) {
+		if ($FORM{protocol} ne "IPv6") {
+			&print_error("ERROR: IPv6 address for IPv4 query");
+		}
+	} else {
+		&print_error("Illegal characters in parameter string");
+	}
 }
 
 $FORM{addr} = "" if ($FORM{addr} =~ /^[ ]*$/);
@@ -671,6 +677,7 @@ sub print_results
 			$_ = <P>;
 		}
 
+		next if (/Type escape sequence to abort./);
 		s|[\r\n]||g;
 		s|&|&amp;|g;
 		s|<|&lt;|g;
@@ -733,15 +740,18 @@ sub print_results
 		} elsif ($command =~ /^show route advertising-protocol bgp\s+[\d\.A-Fa-f:]+$/i) {
 			s/^([\d\.A-Fa-f:\/]+)\s*$/(bgplink($1, "$1+exact"))/e;
 			s/^(.{30}[ ]{7})([\d\s,\{\}]+)([I\?])$/($1 . as2link($2) . $3)/e;
-		} elsif ($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) {
-			my $ip = $1;
-			s/(Prefix )(advertised)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+advertised-routes") . $3)/e;
-			s/(prefixes )(received)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
-			s/(\s+)(Received)( prefixes:\s+[1-9]\d*)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
-			s/ ([1-9]\d* )(accepted)( prefixes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
-			s/^(  [1-9]\d* )(accepted)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$ip+routes") . $3)/e;
+		} elsif (($command =~ /^show ip bgp n\w*\s+([\d\.]+)/i) ||
+		         ($command =~ /^show ip bgp n\w*$/i)) {
+			$lastip = $1 if ($1 ne "");
+			$lastip = $1 if (/^BGP neighbor is ([\d\.]+),/);
+			s/(Prefix )(advertised)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$lastip+advertised-routes") . $3)/e;
+			s/(prefixes )(received)( [1-9]\d*)/($1 . bgplink($2, "neighbors+$lastip+routes") . $3)/e;
+			s/(\s+)(Received)( prefixes:\s+[1-9]\d*)/($1 . bgplink($2, "neighbors+$lastip+routes") . $3)/e;
+			s/( [1-9]\d* )(accepted)( prefixes)/($1 . bgplink($2, "neighbors+$lastip+routes") . $3)/e;
+			s/^(  [1-9]\d* )(accepted|denied but saved)( prefixes consume \d+ bytes)/($1 . bgplink($2, "neighbors+$lastip+received-routes") . $3)/e;
+			s/^(BGP neighbor is )(\d+\.\d+\.\d+\.\d+)(,)/($1 . bgplink($2, "neighbors+$2") . $3)/e;
 			s/^( Description: )(.*)$/$1<B>$2<\/B>/;
-			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
+			s/(,\s+remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 			s/(, local AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show bgp ipv6 n\w*\s+([\dA-Fa-f:]+)/i) {
 			my $ip = $1;

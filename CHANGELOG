@@ -1,3 +1,7 @@
+20.05.2003	1.7p6
+	! deny IPv6 addresses in IPv4 query
+	+ It is now possible to see all BGP neighbors
+
 04.03.2003	1.7p5
 	! link from "show bgp ipv6 summary" to
 	  "show bgp ipv6 neighbors x routes" fixed when summary used one line
