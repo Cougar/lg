@@ -1,0 +1,287 @@
+    1	ARIN:BBN Planet
+   22	ARIN:Naval Ocean Systems Center
+  109	ARIN:Cisco Systems, Inc.
+  209	ARIN:Qwest
+  222	ARIN:Air Force Logistics Command
+  234	ARIN:Blackrose Society
+  267	ARIN:Nether.Net
+  278	ARIN:Red Academica de Mexico
+  286	RIPE:KPNQwest
+  293	ARIN:Energy Sciences Network (ESnet)
+  513	RIPE:CERN
+  517	RIPE:KPNQwest Germany GmbH
+  680	ARIN:DFN-IP service G-WiN
+  701	ARIN:ALTERNET (UUNET)
+  702	RIPE:UUNET
+  715	ARIN:Zocalo
+  719	RIPE:LANLINK
+  766	ARIN:Programa IRIS
+  786	ARIN:University of London Computer Centre
+  790	RIPE:KPNQwest Finland
+ 1101	ARIN:SURFnet BV
+ 1102	ARIN:SURFnet BV
+ 1103	ARIN:SURFnet BV
+#	     SURFnet BV
+ 1122	ARIN:SURFnet BV
+#
+ 1200	ARIN:SURFnet BV
+ 1221	APNIC:Telstra Pty Ltd
+ 1239	ARIN:SprintLink
+ 1257	RIPE:SWIPnet Swedish IP Network
+ 1273	RIPE:Cable & Wireless Deutschland GmbH
+ 1275	ARIN:DFN-IP service and DFN customer networks
+ 1290	RIPE:PSINet UK Ltd.
+ 1299	RIPE:Telia Sweden (TELIANET-EUROPE)
+ 1653	RIPE:SUNET (Swedish University Network)
+ 1654	ARIN:SUNET/KTH
+ 1740	ARIN:CERFNET
+ 1741	RIPE:FUNET
+ 1755	ARIN:Ebone Consortium
+ 1759	RIPE:Sonera Corporation Eu Transit AS
+ 1930	ARIN:Portuguese Academic and Research Network
+ 2116	RIPE:KPNQwest Norway
+ 2380	RIPE:ESTNET (EsData)
+ 2497	ARIN:Japan Network Information Center
+ 2498	ARIN:Japan Network Information Center
+ 2499	ARIN:Japan Network Information Center
+ 2500	ARIN:Japan Network Information Center
+ 2501	ARIN:Japan Network Information Center
+ 2502	ARIN:Japan Network Information Center
+ 2503	ARIN:Japan Network Information Center
+ 2504	ARIN:Japan Network Information Center
+ 2505	ARIN:Japan Network Information Center
+ 2506	ARIN:Japan Network Information Center
+ 2507	ARIN:Japan Network Information Center
+ 2508	ARIN:Japan Network Information Center
+ 2509	ARIN:Japan Network Information Center
+ 2510	ARIN:Japan Network Information Center
+ 2511	ARIN:Japan Network Information Center
+ 2512	ARIN:Japan Network Information Center
+ 2513	ARIN:Japan Network Information Center
+ 2514	ARIN:Japan Network Information Center
+ 2515	ARIN:Japan Network Information Center
+ 2516	ARIN:Japan Network Information Center
+ 2517	ARIN:Japan Network Information Center
+ 2518	ARIN:Japan Network Information Center
+ 2519	ARIN:Japan Network Information Center
+ 2520	ARIN:Japan Network Information Center
+ 2521	ARIN:Japan Network Information Center
+ 2522	ARIN:Japan Network Information Center
+ 2523	ARIN:Japan Network Information Center
+ 2524	ARIN:Japan Network Information Center
+ 2525	ARIN:Japan Network Information Center
+ 2526	ARIN:Japan Network Information Center
+ 2527	ARIN:Japan Network Information Center
+ 2528	ARIN:Japan Network Information Center
+ 2548	ARIN:Business Internet, Inc
+ 2551	ARIN:ICG NetAhead, Inc
+ 2586	RIPE:Uninet
+ 2588	RIPE:LATNET
+ 2603	RIPE:NORDUnet
+ 2611	RIPE:BELNET
+ 2685	ARIN:IBM
+ 2686	ARIN:IBM
+ 2687	ARIN:IBM
+ 2688	ARIN:IBM
+ 2689	ARIN:IBM
+ 2690	ARIN:IBM
+ 2691	ARIN:IBM
+ 2692	ARIN:IBM
+ 2693	ARIN:IBM
+ 2694	ARIN:IBM
+ 2713	ARIN:AT&T Jens Corporation
+ 2764	ARIN:connect.com.au pty ltd
+ 2828	ARIN:Concentric Network Corporation
+ 2905	ARIN:The Internetworking Company of Southern Africa
+ 2914	ARIN:Verio, Inc.
+ 3220	RIPE:KPNQwest Sweden
+ 3274	RIPE:Santa Monica Software Finland Oy
+ 3327	RIPE:KPNQwest Estonia
+ 3332	RIPE:Crebit
+ 3336	RIPE:Kolumbus
+ 3561	ARIN:Cable & Wireless USA
+ 3908	ARIN:Supernet
+ 3909	ARIN:Supernet
+ 3910	ARIN:Supernet
+# 3154 - 3353 RIPE
+ 3220	RIPE:kpnQwest Sweden
+ 3221	RIPE:EENet
+ 3249	RIPE:Estpak Data (ET)
+ 3257	RIPE:Nacamar Data Communications
+ 3265	RIPE:XS4ALL Internet BV
+ 3292	RIPE:TDC Tele Danmark
+ 3300	RIPE:AUCS Communications Services aka Infonet-Europe, The Netherlands
+ 3320	RIPE:Deutsche Telekom AG
+ 3327	RIPE:KPNQwest Estonia
+ 3332	RIPE:Crebit
+ 3333	RIPE:RIPE NCC
+ 3356	ARIN:Level 3 Communications
+ 3425	ARIN:Lawrence Livermore Laboratory
+ 3426	ARIN:Lawrence Livermore Laboratory
+ 3427	ARIN:Lawrence Livermore Laboratory
+ 3428	ARIN:Lawrence Livermore Laboratory
+ 3429	ARIN:Lawrence Livermore Laboratory
+ 3430	ARIN:Lawrence Livermore Laboratory
+ 3431	ARIN:Lawrence Livermore Laboratory
+ 3432	ARIN:Lawrence Livermore Laboratory
+ 3433	ARIN:Lawrence Livermore Laboratory
+ 3434	ARIN:Lawrence Livermore Laboratory
+ 3435	ARIN:Lawrence Livermore Laboratory
+ 3436	ARIN:Lawrence Livermore Laboratory
+ 3437	ARIN:Lawrence Livermore Laboratory
+ 3438	ARIN:Lawrence Livermore Laboratory
+ 3439	ARIN:Lawrence Livermore Laboratory
+ 3440	ARIN:Lawrence Livermore Laboratory
+ 3441	ARIN:Lawrence Livermore Laboratory
+ 3442	ARIN:Lawrence Livermore Laboratory
+ 3443	ARIN:Lawrence Livermore Laboratory
+ 3444	ARIN:Lawrence Livermore Laboratory
+ 3445	ARIN:Lawrence Livermore Laboratory
+ 3549	ARIN:Global Crossing
+ 3557	ARIN:Vixie Enterprises (Altavista)
+ 3748	ARIN:Electronis and Telecommunications Research Institute
+ 3786	ARIN:DACOM Corporation
+ 3967	ARIN:Exodus Communication (Yahoo)
+ 4000	ARIN:Sprint International
+ 4001	ARIN:Sprint International
+ 4002	ARIN:Sprint International
+ 4003	ARIN:Sprint International
+ 4004	ARIN:Sprint International
+ 4005	ARIN:Sprint International
+ 4006	ARIN:NetRail, Inc.
+ 4500	ARIN:Tivoli Systems
+ 4513	ARIN:PFM Communications
+ 4538	ARIN:China Education and Research Network Center
+ 4565	ARIN:Epoch Networks
+ 4589	ARIN:Easynet Group
+# 4608 - 4864 APNIC
+ 4697	APNIC:NTT Software Laboratories
+ 4725	APNIC:Japan Telecom Co., Ltd.
+ 5056	ARIN:Iowa Network Services
+# 5377 - 5631 RIPE
+ 5377	RIPE:Taide
+ 5378	RIPE:Cable and Wireless INS
+ 5388	RIPE:Energis Squared
+ 5400	RIPE:BT Ignite European Backbone
+ 5408	RIPE:Greek Research and Technology Network
+ 5409	RIPE:Jippii (Deutschland) GmbH
+ 5413	RIPE:XO Communications European AS
+ 5459	RIPE:London Internet Exchange Ltd. (LINX)
+ 5515	RIPE:Sonera Finland
+ 5518	RIPE:Telia Latvija
+ 5538	RIPE:LATNET (commercial subnet)
+ 5539	RIPE:SpaceNET AG, Munich
+ 5546	RIPE:MicroLink Online (Delfi)
+ 5574	RIPE:Sonera Sverige AB
+ 5697	ARIN:Interliant
+ 6066	ARIN:MFS Datanet, Inc.
+ 6175	ARIN:Sprint
+ 6342	ARIN:ITESM Campus Monterrey
+ 6395	ARIN:Broadwing Communications Services
+ 6435	ARIN:LavaNet, Inc.
+ 6453	ARIN:Teleglobe Inc.
+ 6461	ARIN:AboveNet Communications, Inc.
+ 6747	RIPE:Lattelekom
+ 6774	RIPE:BELGACOM
+ 6793	RIPE:Telia Finland
+ 6830	RIPE:CHELLO BROADBAND
+ 6851	RIPE:BKCNET - Bank Communications Centre
+ 6853	RIPE:Global One Portugal
+ 6906	RIPE:LvNet (DELFI AS)
+ 6939	ARIN:HURRICANE
+ 6993	ARIN:InterNAP
+ 7018	ARIN:AT&T
+ 7176	RIPE:Genuity European AS (Formerly GTE Internetworking {formerly BBN})
+# 7467 - 7722 APNIC
+ 7610	APNIC:SINGAPORE ADVANCE RESEARCH AND EDUCATION NETWORK
+ 7660	APNIC:Asia Pacific Advanced Network - Japan
+ 7777	ARIN:Vixie Enterprises (RBL)
+ 8002	ARIN:Stealth Communications
+ 8319	RIPE:regio[.NET] GmbH
+ 8068	ARIN:Microsoft
+ 8069	ARIN:Microsoft
+ 8070	ARIN:Microsoft
+ 8071	ARIN:Microsoft
+ 8072	ARIN:Microsoft
+ 8073	ARIN:Microsoft
+ 8074	ARIN:Microsoft
+ 8075	ARIN:Microsoft
+# 8192 - 9215 RIPE
+ 8194	RIPE:GOVLVNET - Latvian Government Network
+ 8197	RIPE:NeoNet
+ 8206	RIPE:JUNIKNET
+ 8210	RIPE:Nextbone - Nextra's international backbone (TELENOR)
+ 8240	RIPE:ASO
+ 8269	RIPE:Global One Portugal
+ 8277	RIPE:EuroNet - BE (Wanadoo Belgium)
+ 8285	RIPE:EUnet Latvia (Vernet)
+ 8297	RIPE:Teleglobe (Europe)
+ 8379	RIPE:Cybernet AG german wide network
+ 8517	RIPE:ULAKNET
+ 8605	RIPE:University of Latvia and LANET (Latvian Academic Network)
+ 8627	RIPE:Mediascape Communications AG (former TRANSMEDIA GmbH)
+ 8709	RIPE:Exodus Communications, Inc
+ 8724	RIPE:PARKS
+ 8728	RIPE:Infonet
+ 8834	RIPE:Mainor Anet
+ 8733	RIPE:UPC Belgium - Chello Belgium
+ 8918	RIPE:Carrier1
+ 8933	RIPE:TEN-155 (DANTE)
+ 8954	RIPE:InTouch
+ 9057	RIPE:Level 3 public IP network in Europe
+ 9091	RIPE:ODN CH
+# 9216 - 10239 APNIC
+ 9270	APNIC:Asia Pacific Advanced Network Korea Consortium
+# 9591 - 9622 APNIC
+ 9612	APNIC:INTEC Web and Genome Informatics Corporation
+ 9407	APNIC:DRAGONTAP Internet Transit Access Point
+10566	ARIN:Viagenie inc.
+10753	ARIN:XCOM Technologies
+10764	ARIN:National Center for SupercomputingApplications
+11537	ARIN:University Corporation for Advanced Internet Development
+11853	ARIN:InterNAP
+11854	ARIN:InterNAP
+11855	ARIN:InterNAP
+# 12288 - 13311 RIPE
+12443	RIPE:Riga City Council
+12509	RIPE:Bank of Latvia
+12525	RIPE:INTERNET Ltd.
+12526	RIPE:Latvijas Krajbanka
+12563	RIPE:Levicom (TELE2)
+12578	RIPE:LATTELEKOM-APOLLO
+12587	RIPE:Aizkraukles Banka
+12847	RIPE:Latvian Mobile Telephone
+12957	RIPE:TELENET
+12965	RIPE:Latvijas Unibanka
+12983	RIPE:SAULESBANKA
+12993	RIPE:Digitalas Ekonomikas Attistibas Centrs
+13244	RIPE:Rietumu Banka
+13297	RIPE:Ebone Nordic Regional network
+13272	RIPE:ComTrade
+14277	RIPE:Nokia
+15169	ARIN:Google
+15684	RIPE:OptiCom
+15721	RIPE:C.T.CO. Ltd
+15775	RIPE:Latvijas Dzelzcels - Latvian railroad company
+15827	RIPE:School of Business Administration Turiba
+16014	RIPE:Estonian Mobile Telephone Company Ltd.
+16062	RIPE:Talks Ltd.
+16279	RIPE:Parex Bank AS
+17224	ARIN:ATT-CERFNET-BLOCK
+17225	ARIN:ATT-CERFNET-BLOCK
+17226	ARIN:ATT-CERFNET-BLOCK
+17227	ARIN:ATT-CERFNET-BLOCK
+17228	ARIN:ATT-CERFNET-BLOCK
+17229	ARIN:ATT-CERFNET-BLOCK
+17230	ARIN:ATT-CERFNET-BLOCK
+17231	ARIN:ATT-CERFNET-BLOCK
+17232	ARIN:ATT-CERFNET-BLOCK
+17233	ARIN:ATT-CERFNET-BLOCK
+# 17408 - 18431 APNIC
+17419	APNIC:HiNet IPv6 Service Network., Data Communication Business Group, Chunghwa Telecom Co., Ltd.
+17715	APNIC:ChungHwa Telecom. Co. Telecommunication Lab.
+17717	APNIC:Taiwan Network Information Center
+# 20480 - 21503 RIPE
+20548	RIPE:Saeima (Parlament) of Republic of LATVIA
+20834	RIPE:Caladan Communications Ltd
+20861	RIPE:ICL invia AB
