@@ -58,7 +58,7 @@
 #
 
 #
-# ISO Country Codes:
+# ISO 3166 Country Codes:
 #
 CCC=016		AMERICAN SAMOA
 CCC=028		ANTIGUA AND BARBUDA
@@ -302,6 +302,415 @@ CCC=894		ZAMBIA
 
 
 #
+# E.164 international dial prefixes
+#
+EEE=001		United States / Canada / Other countries
+EEE=007		Russian Federation / Kazakhstan
+EEE=020		Egypt
+EEE=027		South Africa
+EEE=030		Greece
+EEE=031		Netherlands
+EEE=032		Belgium
+EEE=033		France
+EEE=034		Spain
+EEE=036		Hungary
+EEE=039		Italy / Holy See (Vatican City State)
+EEE=040		Romania
+EEE=041		Switzerland
+EEE=043		Austria
+EEE=044		United Kingdom / Jersey / Isle of Man / Guernsey
+EEE=045		Denmark
+EEE=046		Sweden
+EEE=047		Norway
+EEE=048		Poland
+EEE=049		Germany
+EEE=051		Peru
+EEE=052		Mexico
+EEE=053		Cuba
+EEE=054		Argentina
+EEE=055		Brazil
+EEE=056		Chile
+EEE=057		Colombia
+EEE=058		Venezuela
+EEE=060		Malaysia
+EEE=061		Australia / Christmas Island / Cocos(Keeling)Island
+EEE=062		Indonesia
+EEE=063		Philippines
+EEE=064		New Zealand
+EEE=065		Singapore
+EEE=066		Thailand
+EEE=081		Japan
+EEE=082		Korea, Republic of
+EEE=084		Viet Nam
+EEE=086		China
+EEE=090		Turkey
+EEE=091		India
+EEE=092		Pakistan
+EEE=093		Afghanistan
+EEE=094		Sri Lanka
+EEE=095		Myanmar
+EEE=098		Iran
+EEE=212		Morocco
+EEE=213		Algeria
+EEE=216		Tunisia
+EEE=218		Libyan Arab Jamahiriya
+EEE=220		Gambia
+EEE=221		Senegal
+EEE=222		Mauritania
+EEE=223		Mali
+EEE=224		Guinea
+EEE=225		Côte D'Ivoire
+EEE=226		Burkina Faso
+EEE=227		Niger
+EEE=228		Togo
+EEE=229		Benin
+EEE=230		Mauritius
+EEE=231		Liberia
+EEE=232		Sierra Leone
+EEE=233		Ghana
+EEE=234		Nigeria
+EEE=235		Chad
+EEE=236		Central African Republic
+EEE=237		Cameroon
+EEE=238		Cape Verde
+EEE=239		São Tome and Principe
+EEE=240		Equatorial Guinea
+EEE=241		Gabon
+EEE=242		Congo
+EEE=243		Congo, Democratic Republic of the
+EEE=244		Angola
+EEE=245		Guinea-Bissau
+EEE=246		British Indian Ocean Territory
+EEE=247		Ascension
+EEE=248		Seychelles
+EEE=249		Sudan
+EEE=250		Rwanda
+EEE=251		Ethiopia
+EEE=252		Somalia
+EEE=253		Djibouti
+EEE=254		Kenya
+EEE=255		Tanzania
+EEE=256		Uganda
+EEE=257		Burundi
+EEE=258		Mozambique
+EEE=260		Zambia
+EEE=261		Madagascar
+EEE=262		Reunion
+EEE=263		Zimbabwe
+EEE=264		Namibia
+EEE=265		Malawi
+EEE=266		Lesotho
+EEE=267		Botswana
+EEE=268		Swaziland
+EEE=269		Comoros / Mayotte
+EEE=290		Saint Helena
+EEE=291		Eritrea
+EEE=297		Aruba
+EEE=298		Faroe Islands
+EEE=299		Greenland
+EEE=350		Gibraltar
+EEE=351		Portugal
+EEE=352		Luxembourg
+EEE=353		Ireland
+EEE=354		Iceland
+EEE=355		Albania
+EEE=356		Malta
+EEE=357		Cyprus
+EEE=358		Finland
+EEE=359		Bulgaria
+EEE=370		Lithuania
+EEE=371		Latvia
+EEE=372		Estonia
+EEE=373		Moldova
+EEE=374		Armenia
+EEE=375		Belarus
+EEE=376		Andorra
+EEE=377		Monaco
+EEE=378		San Marino
+EEE=380		Ukraine
+EEE=381		Serbia and Montenegro
+EEE=385		Croatia
+EEE=386		Slovenia
+EEE=387		Bosnia and Herzegovina
+EEE=388		Group of Countries
+EEE=389		Macedonia
+EEE=420		Czech Republic
+EEE=421		Slovakia
+EEE=423		Liechtenstein
+EEE=500		Falkland Islands (Malvinas)
+EEE=501		Belize
+EEE=502		Guatemala
+EEE=503		El Salvador
+EEE=504		Honduras
+EEE=505		Nicaragua
+EEE=506		Costa Rica
+EEE=507		Panama
+EEE=508		Saint Pierre and Miquelon
+EEE=509		Haiti
+EEE=590		Guadeloupe
+EEE=591		Bolivia
+EEE=592		Guyana
+EEE=593		Ecuador
+EEE=594		French Guiana
+EEE=595		Paraguay
+EEE=596		Martinique
+EEE=597		Suriname
+EEE=598		Uruguay
+EEE=599		Netherlands Antilles
+EEE=670		Timor-Leste
+EEE=672		Antarctica / Norfolk Island
+EEE=673		Brunei Darussalam
+EEE=674		Nauru
+EEE=675		Papua New Guinea
+EEE=676		Tonga
+EEE=677		Solomon Islands
+EEE=678		Vanuatu
+EEE=679		Fiji
+EEE=680		Palau
+EEE=681		Wallis and Futuna Islands
+EEE=682		Cook Islands
+EEE=683		Niue
+EEE=684		American Samoa
+EEE=685		Samoa
+EEE=686		Kiribati
+EEE=687		New Caledonia
+EEE=688		Tuvalu
+EEE=689		French Polynesia
+EEE=690		Tokelau
+EEE=691		Micronesia
+EEE=692		Marshall Islands
+EEE=800		International Freephone Service
+EEE=808		International Shared Cost Service
+EEE=850		Korea, Democratic People's Republic of
+EEE=852		Hong Kong
+EEE=853		Macao
+EEE=855		Cambodia
+EEE=856		Lao People's Democratic Republic
+EEE=870		Inmarsat Single Number Access
+EEE=871		Inmarsat Atlantic Ocean-East
+EEE=872		Inmarsat Pacific Ocean
+EEE=873		Inmarsat Indian Ocean
+EEE=874		Inmarsat Atlantic Ocean-West
+EEE=878		Universal Personal Telecommunication Service
+EEE=880		Bangladesh
+EEE=881		Global Mobile Satellite System
+EEE=882		International Networks
+EEE=886		Taiwan
+EEE=960		Maldives
+EEE=961		Lebanon
+EEE=962		Jordan
+EEE=963		Syrian Arab Republic
+EEE=964		Iraq
+EEE=965		Kuwait
+EEE=966		Saudi Arabia
+EEE=967		Yemen
+EEE=968		Oman
+EEE=970		Palestinian Territory, Occupied
+EEE=971		United Arab Emirates
+EEE=972		Israel
+EEE=973		Bahrain
+EEE=974		Qatar
+EEE=975		Bhutan
+EEE=976		Mongolia
+EEE=977		Nepal
+EEE=979		International Premium Rate Service
+EEE=991		International Public Correspondence Service
+EEE=992		Tajikistan
+EEE=993		Turkmenistan
+EEE=994		Azerbaijan
+EEE=995		Georgia
+EEE=996		Kyrgyz Republic
+EEE=998		Uzbekistan
+
+
+#
+# KPN Eurorings
+# http://www.ripe.net/perl/whois?AS286
+# last update: 23.08.2003
+#
+
+AS286
+
+URL		http://www.ripe.net/perl/whois?AS286
+
+x=1		Prepend 286 once
+x=2		Prepend 286 twice
+x=3		Prepend 286 three times
+x=4		Prepend 286 four times
+x=9		Do not announce
+
+286:1x		$x to European peer
+286:2x		$x to US transit partners
+286:39		Do not announce to AS286 customers
+286:4x		$x to US peering partners
+
+286:18		Don't announce to European in-country peer
+286:28		Don't announce to Qwest
+
+286:66		Set next-hop of the route to Null0 Blackhole
+
+286:70		Assign local preference 70
+286:80		Assign local preference 80 (same as peer)
+286:90		Assign local preference 90
+
+286:286		European customer routes
+286:999		US customer routes (received from Qwest)
+286:888		European or US peer routes
+
+286:101		Prepend extra "286" towards Qwest (AS209)
+286:102		Prepend extra "286 286" towards Qwest (AS209)
+286:103		Prepend extra "286 286 286" towards Qwest (AS209)
+286:104		Prepend extra "286 286 286 286" towards Qwest (AS209)
+286:105		Do not announce to Qwest (AS209)
+
+286:106		Prepend extra "286" towards DTAG (AS3320)
+286:107		Prepend extra "286 286" towards DTAG (AS3320)
+286:108		Prepend extra "286 286 286" towards DTAG (AS3320)
+286:109		Prepend extra "286 286 286 286" towards DTAG (AS3320)
+286:110		Do not announce to DTAG (AS3320)
+
+286:111		Prepend extra "286" towards UUNET (AS702)
+286:112		Prepend extra "286 286" towards UUNET (AS702)
+286:113		Prepend extra "286 286 286" towards UUNET (AS702)
+286:114		Prepend extra "286 286 286 286" towards UUNET (AS702)
+286:115		Do not announce to UUNET (AS702)
+
+286:116		UNUSED
+286:117		UNUSED
+286:118		UNUSED
+286:119		UNUSED
+286:120		UNUSED
+
+286:126		Prepend extra 286 towards ATT-Global (AS2686)
+286:127		Prepend extra 286 286 towards ATT-Global (AS2686)
+286:128		Prepend extra 286 286 286 towards ATT-Global (AS2686)
+286:129		Prepend extra 286 286 286 286 towards ATT-Global (AS2686)
+286:130		Do not announce to ATT-Global (AS2686)
+
+286:131		Prepend extra 286 towards TeleDenmark (AS3292)
+286:132		Prepend extra 286 286 towards TeleDenmark (AS3292)
+286:133		Prepend extra 286 286 286 towards TeleDenmark (AS3292)
+286:134		Prepend extra 286 286 286 286 towards TeleDenmark (AS3292)
+286:135		Do not announce to TeleDenmark (AS3292)
+
+286:136		Prepend extra 286 towards Infonet (AS3300)
+286:137		Prepend extra 286 286 towards Infonet (AS3300)
+286:138		Prepend extra 286 286 286 towards Infonet (AS3300)
+286:139		Prepend extra 286 286 286 286 towards Infonet (AS3300)
+286:140		Do not announce to Infonet (AS3300)
+
+286:141		Prepend extra 286 towards Global-Crossing (AS3549)
+286:142		Prepend extra 286 286 towards Global-Crossing (AS3549)
+286:143		Prepend extra 286 286 286 towards Global-Crossing (AS3549)
+286:144		Prepend extra 286 286 286 286 towards Global-Crossing (AS3549)
+286:145		Do not announce to Global-Crossing (AS3549)
+
+286:146		Prepend extra 286 towards CW (AS3561)
+286:147		Prepend extra 286 286 towards CW (AS3561)
+286:148		Prepend extra 286 286 286 towards CW (AS3561)
+286:149		Prepend extra 286 286 286 286 towards CW (AS3561)
+286:150		Do not announce to CW (AS3561)
+
+286:151		Prepend extra 286 towards Concert-BT (AS5400)
+286:152		Prepend extra 286 286 towards Concert-BT (AS5400)
+286:153		Prepend extra 286 286 286 towards Concert-BT (AS5400)
+286:154		Prepend extra 286 286 286 286 towards Concert-BT (AS5400)
+286:155		Do not announce to Concert-BT (AS5400)
+
+286:156		Prepend extra 286 towards G1-Opentransit (AS5511)
+286:157		Prepend extra 286 286 towards G1-Opentransit (AS5511)
+286:158		Prepend extra 286 286 286 towards G1-Opentransit (AS5511)
+286:159		Prepend extra 286 286 286 286 towards G1-Opentransit (AS5511)
+286:160		Do not announce to G1-Opentransit (AS5511)
+
+286:161		Prepend extra 286 towards AboveNet (AS6461)
+286:162		Prepend extra 286 286 towards AboveNet (AS6461)
+286:163		Prepend extra 286 286 286 towards AboveNet (AS6461)
+286:164		Prepend extra 286 286 286 286 towards AboveNet (AS6461)
+286:165		Do not announce to AboveNet (AS6461)
+
+286:166		Prepend extra 286 towards Chello (AS6830)
+286:167		Prepend extra 286 286 towards Chello (AS6830)
+286:168		Prepend extra 286 286 286 towards Chello (AS6830)
+286:169		Prepend extra 286 286 286 286 towards Chello (AS6830)
+286:170		Do not announce to Chello (AS6830)
+
+286:176		Prepend extra 286 towards Colt (AS8220)
+286:177		Prepend extra 286 286 towards Colt (AS8220)
+286:178		Prepend extra 286 286 286 towards Colt (AS8220)
+286:179		Prepend extra 286 286 286 286 towards Colt (AS8220)
+286:180		Do not announce to Colt (AS8220)
+
+286:181		Prepend extra 286 towards Teleglobe-Europe (AS6453)
+286:182		Prepend extra 286 286 towards Teleglobe-Europe (AS6453)
+286:183		Prepend extra 286 286 286 towards Teleglobe-Europe (AS6453)
+286:184		Prepend extra 286 286 286 286 towards Teleglobe-Europe (AS6453)
+286:185		Do not announce to Teleglobe-Europe (AS6453)
+
+286:186		Prepend extra 286 towards Level3 (AS3356)
+286:187		Prepend extra 286 286 towards Level3 (AS3356)
+286:188		Prepend extra 286 286 286 towards Level3 (AS3356)
+286:189		Prepend extra 286 286 286 286 towards Level3 (AS3356)
+286:190		Do not announce to Level3 (AS3356)
+
+286:191		Prepend extra 286 towards Telefonica-Data (AS12956)
+286:192		Prepend extra 286 286 towards Telefonica-Data (AS12956)
+286:193		Prepend extra 286 286 286 towards Telefonica-Data (AS12956)
+286:194		Prepend extra 286 286 286 286 towards Telefonica-Data (AS12956)
+286:195		Do not announce to Telefonica-Data (AS12956)
+
+286:196		Prepend extra 286 towards PSINET EUROPE (AS3291)
+286:197		Prepend extra 286 286 towards PSINET EUROPE (AS3291)
+286:198		Prepend extra 286 286 286 towards PSINET EUROPE (AS3291)
+286:199		Prepend extra 286 286 286 286 towards PSINET EUROPE (AS3291)
+286:200		Do not announce to PSINET EUROPE (AS3291)
+
+286:201		Prepend extra 286 towards Sprint (AS1239)
+286:202		Prepend extra 286 286 towards Sprint (AS1239)
+286:203		Prepend extra 286 286 286 towards Sprint (AS1239)
+286:204		Prepend extra 286 286 286 286 towards Sprint (AS1239)
+286:205		Do not announce to Sprint (AS1239)
+
+286:206		Prepend extra 286 towards Webusenet (AS19151)
+286:207		Prepend extra 286 286 towards Webusenet (AS19151)
+286:208		Prepend extra 286286 286 towards Webusenet (AS19151)
+286:209		Prepend extra 286 286 286 286 towards Webusenet (AS19151)
+286:210		Prepend extra 286 towards Webusenet (AS19151)
+
+286:211		Prepend extra 286 towards Shawcable/BigPipe (AS6327)
+286:212		Prepend extra 286 286 towards Shawcable/BigPipe (AS6327)
+286:213		Prepend extra 286 286 286 towards Shawcable/BigPipe (AS6327)
+286:214		Prepend extra 286 286 286 286 towards Shawcable/BigPipe (AS6327)
+286:215		Prepend extra 286 towards Shawcable/BigPipe (AS6327)
+
+286:216		Prepend extra 286 towards Telianet (AS1299)
+286:217		Prepend extra 286 286 towards Telianet (AS1299)
+286:218		Prepend extra 286 286 286 towards Telianet (AS1299)
+286:219		Prepend extra 286 286 286 286 towards Telianet (AS1299)
+286:220		Do not announce to Telianet (AS1299)
+
+286:221		Prepend extra 286 towards Verio (AS2914)
+286:222		Prepend extra 286 286 towards Verio (AS2914)
+286:223		Prepend extra 286 286 286 towards Verio (AS2914)
+286:224		Prepend extra 286 286 286 286 towards Verio (AS2914)
+286:225		Do not announce to Verio (AS2914)
+
+286:226		Prepend extra 286 towards AOL (AS1668)
+286:227		Prepend extra 286 286 towards AOL (AS1668)
+286:228		Prepend extra 286 286 286 towards AOL (AS1668)
+286:229		Prepend extra 286 286 286 286 towards AOL (AS1668)
+286:230		Do not announce to AOL (AS1668)
+
+286:231		Prepend extra 286 towards Cogentco (AS174)
+286:232		Prepend extra 286 286 towards Cogentco (AS174)
+286:233		Prepend extra 286 286 286 towards Cogentco (AS174)
+286:234		Prepend extra 286 286 286 286 towards Cogentco (AS174)
+286:235		Do not announce to Cogentco (AS174)
+
+286:3EEE	Route is received from $EEE
+
+
+#
 # EUnet Finland
 # as790draft.pdf
 # last update: 27.06.2003
@@ -339,16 +748,250 @@ x=9		(default and takes precedence if present) Don't announce
 790:9999	black hole route
 
 #
+# Cable & Wireless
+# http://www.as1273.net/
+# last update: 11.06.2004
+#
+
+AS1273
+
+URL		http://www.as1273.net/
+
+ppp=000		All Peers & upstreams
+ppp=200		MCI Europe (AS702)
+ppp=199		Global Crossing (AS3549)
+ppp=198		SWIPNET (AS1257)
+ppp=197		Tiscali (AS3257)
+ppp=196		Telia (AS1299)
+ppp=195		France Telecom (AS5511)
+ppp=194		Swisscom (AS3303)
+ppp=193		COLT (AS8220)
+ppp=192		Eircom (AS5466)
+ppp=191		Abovenet (AS6461)
+ppp=190		DTAG (AS3320)
+ppp=189		Arcor Mannesmann (AS3209)
+ppp=188		AT&T EMEA (AS2686)
+ppp=187		DFN (AS680)
+ppp=186		Global Access (AS13129)
+ppp=185		Globix (AS4513)
+ppp=184		I-Primus (AS5427)
+ppp=183		Mobilcom (AS5430)
+ppp=182		Regionet (AS8319)
+ppp=181		Telenor (AS8210)
+ppp=180		Tesion (AS15717)
+ppp=179		BT Ignite (AS8472)
+ppp=178		Telefonica (AS12956)
+ppp=177		Microsoft (AS8086)
+ppp=176		Teleglobe (AS6453)
+ppp=175		Reach (AS4637)
+ppp=174		KPN Eurorings (AS286)
+ppp=173		BBC (AS2818)
+ppp=172		BT (AS5400)
+ppp=171		Bredband (AS8642)
+
+ppp=989		AMSIX (Amsterdam, NL)
+ppp=988		DECIX (Frankfurt, DE)
+ppp=987		INXS-HBG (Hamburg, DE)
+ppp=986		INXS-MUC (Munich, DE)
+ppp=985		LINX (London, UK)
+
+ppp=998		Cable & Wireless America/Savvis (AS3561)
+ppp=997		MCI America (AS701)
+ppp=996		Level 3 (AS3356)
+
+n=0		Do not announce
+n=1		Prepend 1x
+n=2		Prepend 2x
+n=3		Prepend 3x
+n=9		Announce only
+
+1273:3pppn	$n to $ppp
+
+1273:666	Blackhole
+
+1273:90		Sets local preference value within AS1273 to 90
+1273:80		Sets local preference value within AS1273 to 80
+1273:70		Sets local preference value within AS1273 to 70
+
+s=1		Customer
+s=2		Peer
+s=3		Upstream
+
+r=1		North America (U.S.A and Canada)
+r=2		Europe
+r=3		Asia (including Japan) 
+r=4		Australia
+r=5		South America
+r=6		Middle East
+
+1273:srCCC	$s, $r, $CCC
+
+
+#
+# RELCOM
+# http://www.ripe.net/perl/whois?AS2118
+# last update: 05.08.2004
+#
+
+AS2118
+
+URL		http://www.ripe.net/perl/whois?AS2118
+
+2118:1		Set backup localpref into AS1299 and AS1833
+2118:10		Set backup localpref into AS2118 backbone
+2118:11		Announce only to RU
+
+
+#
+# RADIO-MSU
+# http://www.ripe.net/perl/whois?AS2683
+# last update: 07.09.2004
+#
+
+AS2683
+
+URL		http://www.ripe.net/perl/whois?AS2683
+
+2683:1000	don't announce to M9-IX
+2683:1010	announce to M9-IX with +1 prepend
+2683:1020	announce to M9-IX with +2 prepend
+2683:1050	announce to M9-IX with +5 prepend
+
+2683:2000	don't announce to RBNet
+2683:2010	announce to RBNet with +1 prepend
+2683:2020	announce to RBNet with +2 prepend
+2683:2050	announce to RBNet with +5 prepend
+
+2683:3000	don't announce to DFN
+2683:3010	announce to DFN with +1 prepend
+2683:3020	announce to DFN with +2 prepend
+2683:3050	announce to DFN with +5 prepend
+
+
+#
+# Elvis-Telecom
+# http://www.ripe.net/perl/whois?AS2820
+# last update: 05.08.2004
+#
+
+AS2820
+
+URL		http://www.ripe.net/perl/whois?AS2820
+
+2820:70		backup route, low down local preference
+2820:1014	announce only to foreign uplink
+2820:1019	do not announce to any uplink
+2820:1018	do not announce to any peer
+2820:1017	do not announce to russian uplinks
+
+
+#
+# Verio
+# http://info.us.bb.verio.net/routing.html
+# last update: 30.01.2004
+#
+
+AS2914
+
+URL		http://info.us.bb.verio.net/routing.html
+
+2914:490	customer default (localpref 120)
+2914:480	customer backup (localpref 110)
+2914:470	peer (localpref 100)
+2914:460	peer backup (localpref 98)
+2914:450	customer fallback (localpref 96)
+
+2914:429	do not advertise to any peer
+2914:423	prepends o/b to peer 3x
+2914:422	prepends o/b to peer 2x
+2914:421	prepends o/b to peer 1x
+2914:413	prepends o/b to customer 3x
+2914:412	prepends o/b to customer 2x
+2914:411	prepends o/b to customer 1x
+
+2914:410	Verio and customer routes
+2914:420	Peer routes
+
+
+#
+# Golden Telecom (Sovam Teleport / Teleross)
+# http://www.ripe.net/perl/whois?AS3216
+# last update 07.09.2004
+#
+
+AS3216
+
+URL		http://www.ripe.net/perl/whois?AS3216
+
+x=0		Do not advertise
+x=1		Prepend 1 time
+x=2		Prepend 2 times
+x=4		Prepend 4 times
+x=6		Prepend 6 times
+
+3216:500x	$x to UUNET
+3216:501x	$x to C&W
+3216:590x	$x to any INTERNATIONAL peer
+3216:505x	$x to any M9-IX peer
+3216:506x	$x to any SPB-IX peer
+3216:507x	$x to any NSK-IX peer
+3216:521x	$x to Rostelecom private peer (Moscow)
+3216:522x	$x to MTU private peer
+
+yy=70		the lowest value used in the network (BACKUP)
+yy=80		less by 1 than the lowest value of INTERNATIONAL
+yy=90		less by 1 than the lowest value of NATIONAL peer
+
+3216:58yy	Set local preference to $yy
+
+3216:1000	Russian peer (receieved from IX or private peer)
+3216:1001	Russian transit (do not adverties to intl peers)
+3216:1003	SPB peer
+3216:1004	Moscow peer
+3216:1005	NSK peer
+3216:1006	Almaty peer
+3216:1007	Vladivostok peer
+3216:1101	Rostelecom private peering (Moscow)
+3216:1102	MTU private peering (Moscow)
+3216:1103	Vladivostok Electrosvyaz private peering
+3216:2001	Full transit customer and own networks
+3216:3000	Receieved from an international peer, specifically:
+3216:3001	C&W
+3216:3002	UUNET
+3216:4000	Originated in any region, specifically:
+3216:4001	Originated in SPB
+3216:4002	Originated in Novosibirsk
+3216:4003	Originated in Vladivostok
+3216:4004	Originated in Samara
+3216:4005	Originated in NNovgorod
+3216:4006	Originated in Arkhangelsk
+3216:4007	Originated in Tyumen
+3216:4008	Originated in Ekaterinburg
+3216:4009	Originated in Almaty
+3216:4100	Originated in Moscow
+
+
+#
 # Data Telecom
 # last update: 02.07.2003
 #
 
 AS3327
 
+3327:666	Let upstream blackhole it
+
+3327:3003	Private peer
+3327:3004	IPT customer
+
+3327:30CCC	$CCC
+
 3327:30010	Tallinn
 3327:30011	TIX-LAN public peering
 3327:30020	Tartu
 3327:30021	Tartu MIX-LAN public peering
+
+3327:40011	MSK-IX public peering
+3327:40021	LIX public peering
 
 3327:60		Do not export
 
@@ -461,7 +1104,7 @@ URL		http://www.ripe.net/perl/whois?AS3356
 #
 # Globalcrossing
 # https://robin.gblx.net/api/docs/customer-communities.html
-# last update: 27.06.2003
+# last update: 30.01.2004
 #
 
 AS3549
@@ -486,6 +1129,14 @@ x=4		S. America
 x=5		Africa
 
 3549:3xCCC	$CCC - $x
+
+t=1		public exchange
+t=2		private connection
+t=3		private connection
+t=4		customer
+t=5		reserved
+
+3549:t...	$t
 
 y=0		No Export
 y=1		Prepend +1
@@ -513,9 +1164,334 @@ y=3		Prepend +3
 
 
 #
+# Cable & Wireless
+# http://infopage.cary.cw.net/Routing_Registry/communities.htm
+# last update: 16.01.2004
+#
+
+AS3561
+
+URL	http://infopage.cary.cw.net/Routing_Registry/communities.htm
+
+3561:70		Set localpref to 70
+3561:80		Set localpref to 80
+3561:90		Set localpref to 90
+
+s=1		Customer
+s=2		Peer
+
+r=1		North America (U.S.A and Canada)
+r=2		Europe
+r=3		Asia (including Japan) 
+r=4		Australia
+r=5		South America
+r=6		Middle East
+
+3561:srCCC	$s $CCC - $r
+
+n=0		Do not export
+n=1		Prepend once
+n=2		Prepend twice
+n=3		Prepend three times
+n=9		Announce-only
+
+pp=00		All Peers
+pp=01		SBC (AS7132)
+pp=02		Sprint (AS1239)
+pp=03		Tiscali (AS3257)
+pp=04		Qwest (AS209)
+pp=05		AllegianceTelecom (AS2548)
+pp=06		Verio/NTT (AS2914)
+pp=07		Level3 (AS3356)
+pp=08		GlobalCrossing (AS3549)
+pp=09		FranceTelecom (AS5511)
+pp=11		DeutscheTelekomAG (AS3320)
+pp=13		AboveNet/MFN (AS6461)
+pp=14		UUNet (AS701)
+pp=15		AT&T (AS7018)
+pp=18		Cogent (AS174)
+pp=21		ATDN (AS1668)
+pp=41		Colt (AS8220)
+pp=43		AUCS/Infonet (AS3300)
+pp=44		UUNet-EU (AS702)
+pp=46		Telia (AS1299)
+
+3561:30ppn	$n this route to $pp
+
+
+#
+# The Packet Clearing House
+# http://www.pch.net/resources/reference/communities/pch_rs_communities.html
+# last update: 05.08.2004
+#
+
+AS3856
+
+URL		http://www.pch.net/resources/reference/communities/pch_rs_communities.html
+
+3856:1		Customers peer or transit, don't readvertise
+3856:2		Customers peer or transit, don't use and distribute
+3856:3		Customers peer or transit, readvertise to all the other peers
+3856:4		Customer, don't readvertise
+3856:5		Customer, don't use and distribute
+3856:6		Customer, advertise
+
+
+#
+# BT European Backbone
+# http://www.ripe.net/perl/whois?AS5400
+# last update: 11.08.2004
+#
+
+AS5400
+
+URL		http://www.ripe.net/perl/whois?AS5400
+
+a=1		Not announce to
+a=2		AS prepend 5400 to
+
+5400:a000	$a All peers & Transits
+
+5400:a500	$a All Transits
+5400:a501	$a Sprint Transit (AS1239)
+5400:a502	$a SAVVIS Transit (AS3561)
+5400:a503	$a Level 3 Transit (AS3356)
+5400:a504	$a AT&T Transit (AS7018)
+5400:a505	$a UUnet Transit (AS701)
+
+5400:a001	$a Nexica (AS24592)
+5400:a002	$a Fujitsu (AS3324)
+5400:a003	$a Unisource (AS3300)
+5400:a004	$a C&W EU (AS1273)
+5400:a005	$a UUnet (AS702)
+5400:a006	$a Eltec (AS30892)
+5400:a007	$a SupportNet (8582)
+5400:a008	$a AT&T (AS2686)
+5400:a009	$a ACENS (AS16371)
+5400:a010	$a RIPE (AS3333)
+5400:a011	$a Altecom (AS24983)
+5400:a012	$a Globix (AS4513)
+5400:a013	$a Alpi (AS12386)
+5400:a014	$a DTAG (AS3320)
+5400:a015	$a BBC (AS2818)
+5400:a016	$a OpenTransit (AS5511)
+5400:a017	$a Datagrama (AS9019)
+5400:a018	$a Teleglobe (AS8297)
+5400:a019	$a Infonet.BE (AS3304)
+5400:a020	$a Belnet (AS2611)
+5400:a021	$a Belgacom (AS6774)
+5400:a023	$a Tiscali (AS3257)
+5400:a024	$a SwissCom (AS3303)
+5400:a025	$a XS4ALL (AS3265)
+5400:a026	$a Chello (AS6830)
+5400:a027	$a Telia (AS1299)
+5400:a028	$a Versatel (AS9193)
+5400:a029	$a GlobalCrossing (AS3549)
+5400:a030	$a Intelideas (AS12359)
+5400:a031	$a Concentric (AS5413)
+5400:a032	$a Abovenet (AS6461)
+5400:a033	$a AOL (AS1668)
+5400:a034	$a JANET (AS786)
+5400:a035	$a EASYNET (AS4589)
+5400:a036	$a Versatel (AS13127)
+5400:a037	$a Euronet (AS5390)
+5400:a038	$a Colt(8220)
+5400:a039	$a Nextra (8210)
+5400:a040	$a Demon (5417)
+5400:a041	$a PSInet (3291)
+5400:a042	$a TDC TeleDanmark (AS3292)
+5400:a043	$a Telenet (AS6848)
+5400:a044	$a Hong Kong Telecom (AS4637)
+5400:a045	$a Telecom Italia    (AS6762)
+5400:a046	$a EUnet Austria (AS1901)
+5400:a047	$a Via Networks CH (AS1836)
+5400:a048	$a Schlund AG (AS6762)
+5400:a049	$a Global Access (AS13129)
+5400:a050	$a Demon (AS2529)
+5400:a052	$a Jippii Group (AS6667)
+5400:a053	$a XS4ALL Belgium (AS8201)
+5400:a054	$a Google Inc. (AS15169)
+5400:a055	$a Bredband (AS8642)
+5400:a056	$a Yahoo! Europe (AS15635)
+5400:a057	$a Via Networks (AS5669)
+5400:a058	$a Swipnet (AS1257)
+5400:a059	$a Auna (AS16338)
+5400:a060	$a Telefonica Spain (AS3352)
+5400:a061	$a FUNET (AS1741)
+5400:a062	$a SONERA (AS1759)
+5400:a064	$a Elisa (Datatie) (AS719)
+5400:a065	$a FINNET (AS16086)
+5400:a066	$a Nordunet (AS2603)
+5400:a068	$a IP-Only (AS12552)
+5400:a069	$a NETNOD (AS8674)
+5400:a070	$a Lycos (AS12832)
+5400:a071	$a Jazztel (AS12715)
+5400:a072	$a Telenor-Nextel (AS2119)
+5400:a073	$a Eurorings (AS286)
+5400:a074	$a Flag Telecom (AS15412)
+5400:a075	$a RIPE k.root (AS25152)
+5400:a076	$a Adam (AS15699)
+5400:a077	$a Anella (AS13041)
+5400:a078	$a Sarenet (AS3262)
+5400:a079	$a Colt (AS8220)
+5400:a103	$a SBC (AS7132, AS5102)
+5400:a105	$a Rogers (AS812)
+5400:a106	$a ELI (AS5650)
+5400:a109	$a CAIS (AS3491)
+5400:a110	$a Verio (AS2914)
+5400:a114	$a Primus (AS11867)
+5400:a116	$a Hurricane (AS6939)
+5400:a117	$a Broadwing (AS6395)
+5400:a118	$a RCN (AS6079)
+5400:a120	$a Epoch (AS4565)
+5400:a121	$a NASA (AS297)
+5400:a122	$a Shaw Cablesystems (AS6327)
+5400:a123	$a Williams comm (7911)
+5400:a124	$a Qwest (AS209)
+5400:a127	$a IIJ (AS2497)
+5400:a128	$a Microsoft Hotmail (AS8075)
+5400:a129	$a Adelphiacom (AS19548)
+5400:a130	$a Time Warner (AS4323)
+5400:a131	$a ICG (AS2551)
+5400:a132	$a Oarnet (AS600)
+5400:a133	$a Bell Nexxia (AS577)
+5400:a134	$a One Call (AS6402)
+5400:a135	$a Sovernet (AS5738)
+5400:a136	$a Primus (AS6407)
+5400:a137	$a Network Access (AS8001)
+5400:a138	$a KDDI (AS)2516
+5400:a140	$a Stealth Telecom (AS8002)
+5400:a141	$a TTSG (AS13945)
+5400:a143	$a Peer1 (AS13768)
+5400:a144	$a Hinet (AS9680)
+5400:a145	$a DaCom (AS3786)
+5400:a146	$a Group Telecom (AS6539)
+5400:a148	$a ISPrime (AS23393)
+5400:a149	$a New York Internet (AS11403)
+5400:a151	$a Thorne Telecom (AS12124)
+5400:a152	$a Cable Vision (AS6128)
+5400:a153	$a Atlantech Online (AS7784)
+5400:a154	$a Yahoo (AS10310)
+5400:a156	$a Real Connect (AS16559)
+5400:a157	$a Global Innovations (AS3638)
+5400:a158	$a Earth Link (AS4355)
+5400:a159	$a Double Click (AS6432)
+5400:a160	$a Global NAPS (AS1784)
+5400:a161	$a Aleron (AS4200)
+5400:a162	$a IBIS7 (AS19151)
+5400:a163	$a New Edge Networks (AS19029)
+5400:a164	$a TSD Telecom (AS4181)
+5400:a165	$a Allstream (AS15290)
+5400:a166	$a Novia (AS4306)
+5400:a167	$a Nlayer (AS4436)
+5400:a168	$a HopOne (AS14361)
+5400:a169	$a Cogent (AS174)
+5400:a170	$a Yipes (AS6517)
+5400:a171	$a VSNL (AS4755)
+5400:a172	$a Webair (AS27257)
+5400:a173	$a Internet Software (AS27319)
+5400:a174	$a ESnet (AS293)
+5400:a175	$a ONO (AS12457)
+5400:a176	$a Red Iris (AS766)
+5400:a177	$a Telefonica Int. (AS12956)
+5400:a178	$a Marconi Telecom (AS8657)
+
+
+#
+# Polish Telecom's commercial IP network
+# http://www.ripe.net/perl/whois?AS5617
+# last update 07.09.2004
+#
+
+AS5617
+
+URL		http://www.ripe.net/perl/whois?AS5617
+
+x=0		Do not advertise
+x=1		Prepend 1 time
+x=2		Prepend 2 times
+x=3		Prepend 3 times
+
+aa=11		to AS1299 Telia
+aa=12		to AS5511 OpenTransit
+aa=21		to AS8501  POL34
+aa=22		to AS16283 Lodman
+aa=23		to AS8308  NASK
+aa=24		to AS8664  ICM
+aa=26		to AS8890  Kampus Ochota
+aa=27		to AS8364  Pozman
+aa=28		to AS8508  Silweb
+aa=29		to AS8970  WASK
+
+5617:aa0x	$x to $aa
+
+
+#
+# Telecomplete Ltd
+# http://www.ripe.net/perl/whois?AS6320
+# last update: 07.09.2004
+#
+
+AS6320
+
+URL		http://www.ripe.net/perl/whois?AS6320
+
+x=0		Prepend 0 times
+x=1		Prepend 1 time
+x=2		Prepend 2 time
+x=9		Do not announce
+
+6320:1000x	$x to all
+6320:1100x	$x to all peers
+6320:1110x	$x to all peers in London
+6320:1111x	$x to all private peers in London
+6320:1112x	$x to all peers at LINX
+6320:1113x	$x to all peers at XCHANGEPOINT
+6320:1114x	$x to all peers at LIPEX
+6320:1115x	$x to all peers at XchangePoint-LoNAP Shared LAN
+6320:1120x	$x to all peers in Manchester
+6320:1121x	$x to all private peers in Manchester
+6320:1122x	$x to all peers at MaNAP
+6320:1131x	$x to all peers at AMS-IX
+6320:1132x	$x to all peers at FreeIX
+6320:1197x	$x to all peering with 3549
+6320:1198x	$x to all peering with 6453
+6320:1199x	$x to all peering with 7911
+6320:1200x	$x to all transit
+6320:1210x	$x to all transit in London
+6320:1211x	$x to all transit with Telia
+6320:1212x	$x to all transit with Teleglobe
+6320:1220x	$x to all transit in Manchester
+6320:1221x	$x to all transit with Level3
+
+6320:21000	Peer
+6320:21100	Peers in London
+6320:21110	Peers in London Private
+6320:21120	Peers in LINX
+6320:21130	Peers in XCHANGEPOINT
+6320:21140	Peers in LIPEX
+6320:21150	Peers in XCHANGEPOINT-LoNAP Shared LAN
+6320:21200	Peers in Manchester
+6320:21210	Peers in Manchester Private
+6320:21220	Peers in MaNAP
+6320:21310	Peers in AMS-IX
+6320:21320	Peers in FreeIX
+6320:22000	Transit
+6320:22100	Transit in London
+6320:22110	Transit Telia
+6320:22120	Transit Teleglobe
+6320:22200	Transit Manchester
+6320:22210	Transit Level3
+6320:23000	Customer
+6320:23010	Customer All Routes
+6320:23020	Customer UK Routes Only
+6320:24000	Local
+
+
+#
 # Jippii Group / EUnet Finland Backbone AS
 # http://www.jippii.net/communities.shtml
-# last update: 27.06.2003
+# last update: 08.02.2004
 #
 
 AS6667
@@ -538,10 +1514,16 @@ x=9		(default and takes precedence if present) Don't announce
 6667:202x	$x to peers in Stockholm Sweden and at Netnod (DGIX)
 6667:203x	$x to peers in London United Kingdom and as LINX
 6667:204x	$x to peers in Frankfurt Germany and at DECIX
+6667:205x	$x to peers in Hamburg Germany
+6667:206x	$x to peers in Copenhagen Denmark and at DIX
+6667:207x	$x to peers in Oslo Norway and at NIX
+6667:208x	$x to peers in Amsterdam The Netherlands and at AMS-IX
+6667:209x	$x to peers in New York USA and at NYIIX
 
 6667:90x	$x to all AS6667 customers
 6667:100x	$x to all transits
 6667:101x	$x to AS3356 Level3
+6667:102x	$x to AS3549 Global Crossing
 
 6667:3000	internal or customer
 6667:3001	public peering
@@ -554,6 +1536,414 @@ x=9		(default and takes precedence if present) Don't announce
 6667:4003	Stockholm Sweden
 6667:4004	London United Kingdom
 6667:4005	Frankfurt Germany
+6667:4006	Hamburg Germany
+6667:4007	Copenhagen Denmark
+6667:4008	Oslo Norway
+6667:4009	Amsterdam The Netherlands
+6667:4010	New York USA
+
+6667:9999	black hole route
+
+
+#
+# SK SLOVAK TELECOM
+# http://www.ripe.net/perl/whois?AS6855
+# last update: 07.09.2004
+#
+
+AS6855
+
+URL		http://www.ripe.net/perl/whois?AS6855
+
+6855:1101	Do not announce to SIX
+6855:1102	Do not announce to Deutsche Telekom AS3320
+6855:1103	Do not announce to UTA AS8437
+6855:1104	Do not announce to MATAV AS5483
+
+6855:1201	Prepend 6855 when announcing to SIX
+6855:1202	Prepend 6855 when announcing to Deutsche Telekom AS3320
+6855:1203	Prepend 6855 when announcing to UTA AS8437
+6855:1204	Prepend 6855 when announcing to MATAV AS5483
+
+6855:1301	Prepend 6855 6855 when announcing to SIX
+6855:1302	Prepend 6855 6855 when announcing to Deutsche Telekom AS3320
+6855:1303	Prepend 6855 6855 when announcing to UTA AS8437
+6855:1304	Prepend 6855 6855 when announcing to MATAV AS5483
+
+6855:50		SET_LOCAL_PREFERENCE to 50
+6855:90		SET_LOCAL_PREFERENCE to 90
+
+6855:2401	Routes from SIX peering
+6855:2402	Routes from Deutsche Telekom
+6855:2403	Routes from UTA
+6855:2404	Routes from MATAV peering
+
+6855:2700	Default route
+
+
+#
+# AT&T
+# http://isp-lists.isp-planet.com/isp-bgp/0207/msg00015.html
+# last update: 30.01.2004
+#
+
+AS7018
+
+URL		http://isp-lists.isp-planet.com/isp-bgp/0207/msg00015.html
+
+7018:100	localpref 100 assigned - primary routes
+7018:90		localpref 90 - customer backup routes (INTRA-AT&T)
+7018:80		localpref 80 - routes equal to peer routes
+7018:70		localpref 70 - customer provided backup (INTER-AT&T and other ISP)
+7018:20		(deflt) Assign comm. 7018:2000 to routes (announce to peers and customers) not needed for customer-owned IP's
+7018:25		assign 7018:2500 to routes (announce to customers only)
+7018:21		assign 7018:2010 (!) (not advertised to peers or cust.)
+
+
+#
+# Net Access
+# http://www.eng.nac.net/communities.html
+# last update: 30.01.2004
+#
+
+AS8001
+
+URL		http://www.eng.nac.net/communities.html
+
+tt=00		All Transitors
+tt=01		<< Deprecated  >>
+tt=02		Cogent Communications
+tt=03		<< Deprecated  >>
+tt=04		BBC
+tt=05		<< Deprecated  >>
+tt=06		WilTel Communications
+tt=07		AT&T
+tt=08		Aleron
+tt=09		DCJN
+
+p=0		Do Not Advertise
+p=1		One Prepend
+p=2		Two Prepends
+p=3		Three Prepends
+
+8001:10tt	Transit: $tt Standard Community
+8001:10ttp	Transit: $p to $tt
+
+xx=00		All Public Peers
+xx=01		NYIIX
+xx=02		MAE-East ATM
+xx=03		ISPCondo
+xx=04		LINX
+xx=05		LoNAP
+xx=06		Equinix Ashburn
+xx=07		TorIX
+
+8001:20xx	Public Peering: $xx Standard Community
+8001:20xxp	Public Peering: $p to $xx
+
+yy=00		All Private Peers
+yy=01		AOL
+yy=02		<< Deprecated  >>
+yy=03		PSI Net
+yy=04		KDDI
+yy=05		RCN
+yy=06		Hurricane Electric
+yy=07		Tellurian Networks
+yy=08		Monmouth Internet
+yy=09		MFN / AboveNet
+yy=10		Cablevision/Lightpath
+yy=11		Global Innovations
+yy=12		Shaw Cable
+yy=13		Reach/HKT/Telstra
+yy=14		Global Access Telecom 
+yy=15		Global NAPs
+
+8001:30yy	Private Peering: $yy Standard Community
+8001:30yyp	Private Peering: $p to $yy
+
+c=0		Customer
+c=1		NYC (Telehouse - 25 Broadway, NY, NY)
+c=2		OCT (NAC - 1719 Route 10, Parsippany, NJ)
+c=3		NWR (Equinix - 165 Halsey St, Newark, NJ)
+c=4		ADC (MFN - 8100 Boone Blvd, McLean, VA)
+c=5		LTN (Telehouse Docklands - London, UK)
+c=6		TLW (TelX - 60 Hudson St, New York, NY)
+c=7		SNE (Sprint - 13 Adams St, Newton, NJ)
+c=8		ASH (Equinix - Ashburn, VA)
+
+8001:400c	Customer: $c
+8001:p		Customer: $p
+8001:115	Customer: Decrease Local-Preference
+8001:120	Customer: Standard Local-Preference
+8001:125	Customer: Increase Local-Preference
+
+8001:5000	NAC Originated
+8001:5001	NAC Originated: NYC (Telehouse - 25 Broadway, NY, NY)
+8001:5002	NAC Originated: OCT (NAC - 1719 Route 10, Parsippany, NJ)
+8001:5003	NAC Originated: NWR (Equinix - 165 Halsey St, Newark, NJ)
+8001:5004	NAC Originated: ADC (MFN, 8100 Boone Blvd, McLean, VA)
+8001:5005	NAC Originated: LTN (Telehouse Docklands, London, UK)
+8001:5006	NAC Originated: TLW (TelX - 60 Hudson St, New York, NY)
+8001:5007	NAC Originated: SNE (Sprint - 13 Adams St, Newton, NJ)
+8001:5008	NAC Originated: ASH (Equinix - Ashburn, VA)
+8001:5009	NAC Originated: TOR (RACO - Toronto, ON)
+
+8001:99		Route will NOT be prepended to any transit provider
+
+
+#
+# Research and Academic Network in Poland
+# http://www.ripe.net/perl/whois?AS8308
+# last update: 07.09.2004
+#
+
+AS8308
+
+URL		http://www.ripe.net/perl/whois?AS8308
+
+8308:55521	- prefix is not announced to AS5617
+8308:55526	- prefix is not announced to AS8246
+8308:55035	- local-preference is lowered to 35
+
+8308:60000	Customers
+8308:60100	Customers
+8308:60010	Uplinks
+8308:60030	IX (DE-CIX)
+8308:60050	Local peerings
+
+8308:5617	TPNET (AS5617)
+8308:8246	IPartners (AS8246)
+8308:8938	Energis (AS8938)
+8308:24748	ATMAN (AS24748)
+
+
+#
+# RTComm.RU
+# http://www.ripe.net/perl/whois?AS8342
+# last update: 10.08.2004
+#
+
+AS8342
+
+URL		http://www.ripe.net/perl/whois?AS8342
+
+x=0		Do not advertise
+x=1		Prepend 8342 1 time
+x=2		Prepend 8342 2 times
+x=3		Prepend 8342 3 times
+x=4		Prepend 8342 4 times
+x=5		Prepend 8342 2 times
+x=6		Prepend 8342 6 times
+
+8342:100x	$x to any UPSTREAM
+8342:110x	$x to any INTERNATIONAL peer
+8342:120x	$x to any RUSSIAN peer
+
+8342:1900	BACKUP (local pref 100)
+
+
+# Hotchilli Internet
+# http://www.ripe.net/perl/whois?AS8419
+# last update: 07.09.2004
+#
+
+AS8419
+
+URL		http://www.ripe.net/perl/whois?AS8419
+
+8419:100	all transit routes
+8419:110	full transit routes
+8419:120	partial transit routes
+8419:200	all peering routes
+8419:210	peering routes received from LIPEX
+8419:220	peering routes received from LoNAP
+8419:230	peering routes received from XPE
+8419:231	peering routes received from XPE MLP
+8419:240	peering routes received from LINX
+8419:300	all customer/internal routes
+8419:310	customer routes
+8419:320	internal routes
+
+
+#
+# United Telekom Austria
+# http://www.ripe.net/perl/whois?AS8437
+# last update: 07.09.2004
+#
+
+AS8437
+
+URL		http://www.ripe.net/perl/whois?AS8437
+
+x=0		do not announce
+x=1		prepend 1x
+x=2		prepend 2x
+x=3		prepend 3x
+
+8437:400x	$x to all upstreams
+8437:401x	$x to all peerings
+8437:4100	lower local-preference
+8437:300x	$x to IP-Plus (AS3303)
+8437:302x	$x to Level3 (3356)
+8437:303x	$x to Abovenet (6461)
+8437:305x	$x to Sprint (AS1239)
+
+8437:310x	$x to VIX
+8437:312x	$x to BIX
+8437:313x	$x to DE-CIX
+8437:314x	$x to NIX
+8437:315x	$x to AMS-IX
+
+8437:1000	Customer Routes
+8437:1004	Peering Routes
+
+8437:1010	VIX
+8437:1012	BIX
+8437:1013	DE-CIX
+8437:1014	NIX
+8437:1015	AMS-IX
+
+
+#
+# Swiat Internet SA Transit Network
+# http://www.ripe.net/perl/whois?AS12887
+# last update: 07.09.2004
+#
+
+AS12887
+
+URL		http://www.ripe.net/perl/whois?AS12887
+
+12887:3021	Prepend +1 to AS3292 (TDC Carrier)
+12887:3022	Prepend +2 to AS3292 (TDC Carrier)
+12887:3023	Prepend +3 to AS3292 (TDC Carrier)
+12887:3024	Prepend +4 to AS3292 (TDC Carrier)
+12887:3025	Prepend +5 to AS3292 (TDC Carrier)
+12887:3029	Do not advertise to AS3292 (TDC Carrier)
+
+
+#
+# IP Exchange GmbH
+# http://www.ripe.net/perl/whois?AS15598
+# last update: 07.09.2004
+#
+
+AS15598
+
+URL		http://www.ripe.net/perl/whois?AS15598
+
+15598:1300	Amsterdam, The Netherlands, AMS-IX
+
+15598:3100	Duesseldorf, Germany, Tiscali International
+15598:3900	Duesseldorf, Germany, Private Peerings/BGP Customer
+
+15598:1100	Frankfurt, Germany, DE-CIX
+15598:1200	Frankfurt, Germany, Level(3) Communications
+15598:1400	Frankfurt, Germany, Tiscali International
+15598:1500	Frankfurt, Germany, KPN Eurorings
+15598:1668	Frankfurt, Germany, Tiscali/AOL   (AS3257 AS1668)
+15598:3320	Frankfurt, Germany, Tiscali/DTAG  (AS3257 AS3320)
+15598:1900	Frankfurt, Germany, Private Peerings/BGP Customer
+
+15598:2100	Nuernberg, Germany, Lambdanet Communications
+15598:2200	Nuernberg, Germany, KPN Eurorings
+15598:2300	Nuernberg, Germany, N-IX
+15598:2900	Nuernberg, Germany, Private Peerings/BGP Customer
+
+15598:3100	Vienna, Austria, V-IX
+15598:3200	Vienna, Austria, KPN Eurorings
+15598:3250	Vienna, Austria, Tiscali International
+
+
+#
+# Futuro Poland
+# http://www.ripe.net/perl/whois?AS15833
+# last update: 07.09.2004
+#
+
+AS15833
+
+URL		http://www.ripe.net/perl/whois?AS15833
+
+x=0		Do not announce
+x=1		Prepend 1 time
+x=2		Prepend 2 times
+x=3		Prepend 3 times
+
+15833:100x	$x to IPARTNERS (AS8246)
+15833:110x	$x to TELIA (AS1299)
+15833:120x	$x to TPNET (AS5617)
+15833:130x	$x to SATNET (AS5616)
+15833:140x	$x to ATM (AS24748)
+15833:150x	$x to CYFRONET(AS8323)
+15833:160x	$x to WIX/GIX
+15833:170x	$x to POZMAN (AS8364)
+15833:180x	$x to TELENERGO (AS20804)
+
+
+#
+# Millennium Communications S.A.
+# http://www.ripe.net/perl/whois?AS15997
+# last update: 07.09.2004
+#
+
+AS15997
+
+URL		http://www.ripe.net/perl/whois?AS15997
+
+15997:1010	ATMAN.FOREIGN (AS24724)
+15997:1020	ATMAN.CDN (AS15694)
+15997:1030	ATMAN.PL (AS24748)
+15997:1040	WIX (AS-WIX)
+15997:1050	GIX (AS-GIX)
+15997:1060	ICM-IXP (AS8664)
+15997:1070	TPNET (AS5617)
+15997:1080	GTS (AS8246)
+15997:1300	MCNET Customers (AS-MCNET)
+15997:1500	FOREIGN Prefixes (SPRINT, GBLX, DTAG, DE-CIX)
+15997:1600	DOMESTIC Prefixes (ATMAN, WIX/GIX, ICM, TPNET)
+
+x=0		Do not announce
+x=1		Prepend 1 time
+x=2		Prepend 2 times
+x=3		Prepend 3 times
+
+15997:2000	Do not announce to MCNET Customers (AS-MCNET)
+
+15997:201x	$x to ATMAN.FOREIGN (AS24724)
+15997:202x	$x to ATMAN.CDN (AS15694)
+15997:203x	$x to ATMAN.PL (AS24748)
+15997:204x	$x to WIX (AS-WIX)
+15997:205x	$x to GIX (AS-GIX)
+15997:206x	$x to ICM-IXP (AS8664)
+15997:207x	$x to TPNET (AS5617)
+15997:208x	$x to GTS (AS8246)
+
+
+#
+# KeConnect Internet AS
+# http://www.ripe.net/perl/whois?AS16034
+# last update: 07.09.2004
+#
+
+AS16034
+
+URL		http://www.ripe.net/perl/whois?AS16034
+
+16034:600	Level3 Transit
+16034:602	NTT Transit
+16034:603	Hotlinks Transit
+16034:700	XPE
+16034:701	XPE/LoNAP
+16034:702	PKX
+16034:703	XPE MLP
+16034:704	LIPEX
+16034:705	LIPEX MLP
+16034:710	Private Peer
+16034:760	UK6x Transit
+16034:761	UK6x Peers
+16034:762	XchangePoint IPv6
+16034:763	Lipex IPv6
 
 
 #
@@ -573,3 +1963,86 @@ URL		http://www.ripe.net/perl/whois?AS16150
 16150:90	Announce to peers only
 16150:91	Announce to peers only prepend once
 16150:92	Announce to peers only prepend twice
+
+#
+# InSat GmbH
+# http://www.ripe.net/perl/whois?AS20535
+# last update: 07.09.2004
+#
+
+AS20535
+
+URL		http://www.ripe.net/perl/whois?AS20535
+
+20535:60	Set localpref to 60
+20535:70	Set localpref to 70
+
+nn=01		Telia-Sonera
+nn=02		Level3
+
+x=0		Do not announce
+x=1		Prepend 1 time
+x=2		Prepend 2 times
+x=3		Prepend 3 times
+
+20535:1nnx	$x to $nn
+20535:2nn	Route is learned from $nn
+20535:2000	Route is learned from upstream, do not announce it to other upstreams
+
+
+#
+# RusComNet Ltd.
+# http://www.ripe.net/perl/whois?AS21414
+# last update: 28.09.2004
+#
+
+AS21414
+
+URL		http://www.ripe.net/perl/whois?AS21414
+
+x=0		do not advertise
+x=1		prepend 21414
+x=2		prepend 21414 2 times
+x=3		prepend 21414 3 times
+x=8		set lowest local-pref within peer
+
+21414:50x	When advertising to UUNet $x
+21414:52x	When advertising to RTCOMM.RU peer $x
+21414:53x	When advertising to Teleross peer $x
+21414:54x	When advertising to TTK peer $x
+21414:57x	When advertising to any MSK-IX peer $x
+
+21414:602	Set local-pref 20 within AS21414 (lowest value for BackUp)
+
+21414:100	Receieved from an Russian peer
+21414:101	Customers
+21414:102	RTCOMM.RU
+21414:103	Teleross
+21414:104	TTK
+21414:107	MSK-IX
+21414:700	Receieved from an UUNet's peer
+21414:701	UUNet-USA
+21414:702	UUNet-EUROPE
+
+
+#
+# The Team Cymru Bogon Route Server Project
+# http://www.cymru.com/BGP/bogon-rs.html
+# last update: 05.08.2004
+#
+
+URL		http://www.cymru.com/BGP/bogon-rs.html
+
+AS65333
+
+65333:888	Cymru Bogon Route
+
+#
+# RFC1997
+#
+
+AS65535
+
+65535:65281	RFC1997 NO_EXPORT
+65535:65282	RFC1997 NO_ADVERTISE
+65535:65283	RFC1997 NO_EXPORT_SUBCONFED
