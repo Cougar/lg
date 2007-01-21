@@ -3,8 +3,15 @@
 # or you can download them from http://www.version6.net/lg/db/
 #
 
-#include as-arin.txt
+#include as-afrinic.txt
 #include as-apnic.txt
-#include as-ripe.txt
+#include as-arin.txt
 #include as-jpnic.txt
 #include as-lacnic.txt
+#include as-ripe.txt
+
+#
+# these lines owerwrite previous records
+#
+
+65333	The Team Cymru Bogon Route Server Project
