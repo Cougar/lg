@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.30 2004/11/25 14:12:42 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.31 2008/03/19 12:44:38 cougar Exp $';
 
 my $default_ostype = "ios";
 
@@ -672,6 +672,11 @@ sub print_results
 		die $@ if $@;
 		$port = 22 if ($port eq "");
 		$ssh = Net::SSH::Perl->new($host, port => $port);
+		if ($] > 5.007) {
+			require Encode;
+			$login = Encode::encode_utf8($login);
+			$password = Encode::encode_utf8($password);
+		}
 		$ssh->login($login, $password);
 		my ($out, $err) = $ssh->cmd("$command");
 		@output = split (/\n/, $out);
