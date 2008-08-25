@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.32 2008/08/25 18:30:22 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.33 2008/08/25 18:44:54 cougar Exp $';
 
 my $default_ostype = "ios";
 
@@ -744,6 +744,11 @@ sub print_results
 	}
 	my $lastip = "";
 	my $inemptyheader = 1;
+	my $regexp;
+	if (($command =~ /show route protocol bgp aspath-regex \"(.*)\"/) ||
+	    ($command =~ /show ip bgp reg\w*\s+(.*)/)) {
+		$regexp = $1;
+	}
 	while (1) {
 		if ($scheme eq "telnet") {
 			if ($#output >= 0) {
@@ -830,10 +835,10 @@ sub print_results
 		         ($command =~ /^show ip bgp\s+[\d\.]+\s+[\d\.]+\s+(l|s)/i) ||
 		         ($command =~ /^show (ip bgp|bgp ipv6) prefix-list/i) ||
 		         ($command =~ /^show (ip bgp|bgp ipv6) route-map/i)) {
-			s/^([\*r ](&gt;|d|h| ).{59})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^([\*r ](&gt;|d|h| ).{59})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3, $regexp) . $4)/e;
 			s/^([\*r ](&gt;|d|h| )[i ])([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($3, $3) . $4)/e;
 			s/^([\*r ](&gt;|d|h| )[i ])([\d\.A-Fa-f:\/]+)$/($1 . bgplink($3, $3))/e;
-			s/^(( ){20}.{41})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3) . $4)/e;
+			s/^(( ){20}.{41})([\d\s,\{\}]+)([ie\?])$/($1 . as2link($3, $regexp) . $4)/e;
 			s/(, remote AS )(\d+)(,)/($1 . as2link($2) . $3)/e;
 		} elsif ($command =~ /^show route (?:advertising|receive)-protocol bgp [\d\.A-Fa-f:]+ [\d\.A-Fa-f:\/]+ /i) {
 			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, $2) . $3)/e;
@@ -906,7 +911,7 @@ sub print_results
 			# JUNOS bugfix
 			s/([^ ])( )(Import)(: )/($1 . "\n " . $2 . bgplink($3, "neighbors+$ip+routes+all") . $4)/e;
 		} elsif ($command =~ /^show route protocol bgp .* terse/i) {
-			s/^(.{20} B .{25} (?:&gt;| ).{15}[^ ]*)( [\d\s,\{\}]+)(.*)$/($1 . as2link($2) . $3)/e;
+			s/^(.{20} B .{25} (?:&gt;| ).{15}[^ ]*)( [\d\s,\{\}]+)(.*)$/($1 . as2link($2, $regexp) . $3)/e;
 			s/^([\* ] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "$2+exact") . $3)/e;
 		} elsif (($command =~ /^show route protocol bgp /i) ||
 			 ($command =~ /^show route aspath-regex /i)) {
@@ -1027,7 +1032,7 @@ sub read_as_list {
 }
 
 sub as2link {
-	my ($line) = @_;
+	my ($line, $regexp) = @_;
 
 	my $prefix;
 	my $suffix;
@@ -1042,14 +1047,22 @@ sub as2link {
 	}
 	my @aslist = split(/[^\d]+/, $line);
 	my @separators = split(/[\d]+/, $line);
+	my @regexplist = split(/[_ ]+/, $regexp);
 	$line = "";
 	for (my $i = 0; $i <= $#aslist; $i++) {
 		my $as = $aslist[$i];
 		my $sep = "";
 		$sep = $separators[$i + 1] if ($i <= $#separators);
 		my $rep;
+		my $astxt = $as;
+		for (my $j = 0; $j <= $#regexplist; $j++) {
+			if ($regexplist[$j] eq $as) {
+				$astxt = "<EM>$as</EM>";
+				last;
+			}
+		}
 		if (! defined $AS{$as}) {
-			$rep = $as;
+			$rep = $astxt;
 		} else {
 			my $link = "";
 			if ($AS{$as} =~ /(\w+):/) {
@@ -1061,7 +1074,7 @@ sub as2link {
 			}
 			my $descr = $AS{$as};
 			$descr = "$2 ($1)" if ($descr =~ /^([^:]+):(.*)$/);
-			$rep = "<A title=\"" . html_encode($descr) . "\"${link}>$as</A>";
+			$rep = "<A title=\"" . html_encode($descr) . "\"${link}>$astxt</A>";
 		}
 		$line .= $rep . $sep;
 	}
