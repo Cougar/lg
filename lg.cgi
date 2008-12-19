@@ -940,7 +940,7 @@ sub print_results
 			s/(\s+AS: )([\d ]+)/($1 . as2link($2))/eg;
 			s/(Community: )([\d: ]+)/($1 . community2link($2))/e;
 			s/(Communities: )([\d: ]+)/($1 . community2link($2))/e;
-			s/(^\s+AS path: )([\d ]+)/($1 . as2link($2))/e;
+			s/(^\s+AS path: )(Merged\[3\]: )?([\d ]+)/($1 . $2 . as2link($3))/e;
 			s/^([\dA-Fa-f:]+[\d\.A-Fa-f:\/]+)(\s*)/("<B>" . bgplink($1, "$1+exact") . "<\/B>$2")/e;
 			$_ = "<FONT COLOR=\"${best}\">$_</FONT>" if ($best ne "");
 		} elsif ($command =~ /bgp/) {
@@ -1047,13 +1047,13 @@ sub as2link {
 	}
 	my @aslist = split(/[^\d]+/, $line);
 	my @separators = split(/[\d]+/, $line);
-	my @regexplist = split(/[_ ]+/, $regexp);
+	my @regexplist = split(/[_^$ ]+/, $regexp);
 	$line = "";
 	for (my $i = 0; $i <= $#aslist; $i++) {
 		my $as = $aslist[$i];
+		$as = sprintf("%d.%d", $as / 65536, $as % 65536) if ($as > 65535);
 		my $sep = "";
 		$sep = $separators[$i + 1] if ($i <= $#separators);
-		my $rep;
 		my $astxt = $as;
 		for (my $j = 0; $j <= $#regexplist; $j++) {
 			if ($regexplist[$j] eq $as) {
@@ -1061,6 +1061,7 @@ sub as2link {
 				last;
 			}
 		}
+		my $rep;
 		if (! defined $AS{$as}) {
 			$rep = $astxt;
 		} else {
