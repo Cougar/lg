@@ -1,0 +1,7 @@
+as-*.txt
+as.db
+
+.*
+!.gitignore
+
+*~
