@@ -105,10 +105,10 @@ takes only 0.2 sec ;-) Use DB if possible!
 
 As long as the configuration file is quite simple, I don't give here any help
 how to configure LG. Just look at lg.conf, all possible ways how to configure
-it, are shown in ths file already ;-)
+it, are shown in this file already ;-)
 
 Default logfile is /var/log/lg.log, be sure that your webserver can write
-it or use any other file (or don't use art all).
+it or use any other file (or don't use at all).
 
 
 
@@ -121,7 +121,7 @@ will check Referer and therefore deny all outside links.
 There are also some LG sites which support only POST method and are also
 unusable. LG can forward browsers to any other address but can't send POST
 data with it. It is possible to act as proxy for these sites but this is not
-implemented yet and I'm not sure it is neccessary at all. At least at the
+implemented yet and I'm not sure it is necessary at all. At least at the
 current moment ;-)
 
 When using Zebra you can specify one port for bgpd and another for zebra
