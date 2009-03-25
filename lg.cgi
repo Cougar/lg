@@ -1051,7 +1051,6 @@ sub as2link {
 	$line = "";
 	for (my $i = 0; $i <= $#aslist; $i++) {
 		my $as = $aslist[$i];
-		$as = sprintf("%d.%d", $as / 65536, $as % 65536) if ($as > 65535);
 		my $sep = "";
 		$sep = $separators[$i + 1] if ($i <= $#separators);
 		my $astxt = $as;
