@@ -793,6 +793,14 @@ sub showline {
 	my $input = shift;
 	$linebuf .= $input;
 
+	if ($command =~ /^trace/i | $command =~ /^ping/i) {
+		if ($command =~ /^trace/i) {
+			$input =~ s/(\[AS\s+)(\d+)(\])/($1 . as2link($2) . $3)/e;
+		}
+		print $input;
+		return;
+	}
+
 	if ($linebuf =~ /.+\n.+/) {
 		my ($line1, $rest) = split(/\n/, $linebuf, 2);
 		$linebuf = '';
@@ -994,8 +1002,6 @@ sub showline {
 		if ($command =~ /-protocol/) {
 			s/^([ \*] )([\d\.A-Fa-f:\/]+)(\s+)/($1 . bgplink($2, "$2+exact") . $3)/e;
 		}
-	} elsif ($command =~ /^trace/i) {
-		s/(\[AS\s+)(\d+)(\])/($1 . as2link($2) . $3)/e;
 	}
 	print "$_\n";
 }
