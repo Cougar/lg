@@ -27,7 +27,7 @@ $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
 
-my $SYS_progid = '$Id: lg.cgi,v 1.33 2008/08/25 18:44:54 cougar Exp $';
+my $SYS_progid = '$Id: lg.cgi,v 1.30 2004/11/25 14:12:42 cougar Exp $';
 
 my $default_ostype = "ios";
 
@@ -52,6 +52,7 @@ my %router_list;
 my @routers;
 my %namemap;
 my %ostypes;
+my %logicalsystem;
 my %cmdmap;
 
 my $default_router;
@@ -407,6 +408,8 @@ sub xml_startparse {
 					}
 				} elsif (lc($attrval[$i]) eq "ostype") {
 					$ostypes{$xml_current_router_name} = lc($attrval[$i+1]);
+				} elsif (lc($attrval[$i]) eq "logical-system") {
+					$logicalsystem{$xml_current_router_name} = lc($attrval[$i+1]);
 				}
 			}
 			if ($xml_current_router_name eq "") {
@@ -680,15 +683,18 @@ sub print_results
 			use Net::SSH::Perl::Cipher;
 		";
 		die $@ if $@;
+		my $remotecmd = $command;
+		$remotecmd = "set cli logical-system $logicalsystem{$FORM{router}}; " . $command if (defined $logicalsystem{$FORM{router}});
 		$port = 22 if ($port eq "");
 		$ssh = Net::SSH::Perl->new($host, port => $port);
 		if ($] > 5.007) {
 			require Encode;
 			$login = Encode::encode_utf8($login);
 			$password = Encode::encode_utf8($password);
+			$remotecmd = Encode::encode_utf8($remotecmd);
 		}
 		$ssh->login($login, $password);
-		my ($out, $err) = $ssh->cmd("$command");
+		my ($out, $err) = $ssh->cmd("$remotecmd");
 		@output = split (/\n/, $out);
 	} elsif ($scheme eq "telnet") {
 		eval "
@@ -780,6 +786,7 @@ sub print_results
 
 		next if (/Type escape sequence to abort./);
 		next if (/Translating .*\.\.\.domain server/);
+		next if (/Logical system: /);
 
 		next if (($inemptyheader) && (/^$/));
 		$inemptyheader = 0;
@@ -995,7 +1002,6 @@ sub cgi_decode {
 		#### Strip out semicolons unless for special character
 		$value =~ s/;/$$/g;
 		$value =~ s/&(\S{1,6})$$/&\1;/g;
-		$value =~ s/$$/ /g;
 
 		$FORM{$name} .= $value;
 	}

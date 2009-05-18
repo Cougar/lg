@@ -138,6 +138,7 @@ but these don't work as you expect (the same port for bgpd and zebra):
 - telnet://pass@host:2601
 - telnet://pass@host:2605
 
+"logical-system" works only with OSType="JunOS" and when using SSH.
 
 
                                   DOWNLOAD
