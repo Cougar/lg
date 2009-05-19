@@ -495,6 +495,9 @@ sub print_head {
 	}
 	print "<meta name=\"description\" content=\"$titlestr\" \>\n";
 	print "<meta name=\"keywords\" content=\"Looking glass, LG, BGP, prefix-list, AS-path, ASN, traceroute, ping, IPv6, Cisco, Juniper, Zebra, Quagga, internet\" />\n";
+	print "<style type=\"text/css\">\n";
+	print "em { font-style: normal; background: #ffff00; color: #000000; }\n";
+	print "</style>\n";
 	print "</HEAD>\n";
 	print "<BODY BGCOLOR=\"#FFFFFF\" TEXT=\"#000000\">\n";
 	if ($logoimage ne "") {
