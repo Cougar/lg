@@ -682,7 +682,7 @@ sub run_command
 		print_error("Configuration error, missing rshcmd") if ($rshcmd eq "");
 		open(P, "$rshcmd $host \'$command\' |");
 		while (<P>) {
-			showline($_);
+			showlines($_);
 		}
 		close(P);
 	} elsif ($scheme eq "ssh") {
@@ -703,8 +703,8 @@ sub run_command
 			$remotecmd = Encode::encode_utf8($remotecmd);
 		}
 		$ssh->login($login, $password);
-		$ssh->register_handler('stdout', sub { showline($_[1]->bytes); });
-		$ssh->register_handler('stderr', sub { showline($_[1]->bytes); });
+		$ssh->register_handler('stdout', sub { showlines($_[1]->bytes); });
+		$ssh->register_handler('stderr', sub { showlines($_[1]->bytes); });
 		$ssh->cmd("$remotecmd");
 	} elsif ($scheme eq "telnet") {
 		my @output;
@@ -776,7 +776,7 @@ sub run_command
 			} else {
 				last;
 			}
-			showline($_);
+			showlines($_);
 		}
 	} else {
 		print_error("Configuration error, no such scheme: $scheme\n");
@@ -791,10 +791,10 @@ my $telnet;
 my $lastip = "";
 my $inemptyheader = 1;
 my $linebuf = "";
+my $in_func_showlines = 0;
 
-sub showline {
+sub showlines {
 	my $input = shift;
-	$linebuf .= $input;
 
 	if ($command =~ /^trace/i | $command =~ /^ping/i) {
 		if ($command =~ /^trace/i) {
@@ -804,16 +804,19 @@ sub showline {
 		return;
 	}
 
-	if ($linebuf =~ /.+\n.+/) {
-		my ($line1, $rest) = split(/\n/, $linebuf, 2);
-		$linebuf = '';
-		showline ($line1 . "\n");
-		showline ($rest) if ($rest ne "");
-		return;
+	$linebuf .= $input;
+	return if ($in_func_showlines);
+	$in_func_showlines = 1;
+	while ($linebuf =~ /\n/) {
+		my $line1;
+		($line1, $linebuf) = split(/\n/, $linebuf, 2);
+		showline ($line1);
 	}
-	$_ = $linebuf;
-	return unless (/\n$/);
-	$linebuf = '';
+	$in_func_showlines = 0;
+}
+
+sub showline {
+	$_ = shift;
 	chomp;
 
 	next if (/Type escape sequence to abort./);
