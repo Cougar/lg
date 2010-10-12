@@ -706,7 +706,7 @@ sub run_command
 			use Net::SSH::Perl::Cipher;
 		";
 		die $@ if $@;
-		my $remotecmd = $command;
+		my $remotecmd = "$command; quit";
 		$remotecmd = "set cli logical-system $logicalsystem{$FORM{router}}; " . $command if (defined $logicalsystem{$FORM{router}});
 		$port = 22 if ($port eq "");
 		my $ssh = Net::SSH::Perl->new($host, port => $port);
@@ -725,6 +725,8 @@ sub run_command
 			use Net::SSH2;
 		";
 		die $@ if $@;
+		my $remotecmd = "$command; quit";
+		$remotecmd = "set cli logical-system $logicalsystem{$FORM{router}}; " . $command if (defined $logicalsystem{$FORM{router}});
 		$port = 22 if ($port eq "");
 		$ssh2 = Net::SSH2->new();
 		$ssh2->connect($host, $port) or die $!;
@@ -734,8 +736,9 @@ sub run_command
 			$ssh2->auth_publickey($login, $ssh2pubkey, $ssh2key);
 		}
 		my $chan = $ssh2->channel();
+		$chan->blocking(1);
 		$chan->exec("$remotecmd");
-		while (<$chan>) {
+		while ($chan->read($_, 1024)) {
 			showlines($_);
 		};
 		$chan->close;
