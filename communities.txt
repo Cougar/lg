@@ -1805,6 +1805,61 @@ x=3		prepend 3x
 
 
 #
+# starttelecom.ru
+# http://www.ripe.net/perl/whois?AS8744
+# last update: 18.03.2010
+#
+
+AS8744
+
+URL		http://www.ripe.net/perl/whois?AS8744
+
+8744:1		IP Transit
+8744:2		Peering
+8744:3		Customer
+8744:4		Internal prefixes
+
+8744:1001	TATA Communications (AS6453)
+8744:1002	TELIA               (AS1299)
+8744:1004	COMSTAR             (AS8359)
+8744:1005	GOLDENTELECOM       (AS3216)
+
+8744:2001	MSK-IX
+8744:2002	SPB-IX
+8744:2003	DE-CIX
+
+8744:2102	IPTP           (AS41095)
+8744:2103	RUNNET          (AS3267)
+8744:2104	Citytelecom.ru (AS29076)
+8744:2107	MNOGOBYTE      (AS42632)
+8744:2110	PROMETEY-SPB   (AS49686)
+8744:2111	PROMETEY-MSK   (AS49686)
+8744:2112	GOOGLE         (AS15169)
+
+a=0		don't announce prefix
+a=1		announce with one prepend
+a=2		announce with two times prepend
+a=4		announce with four times prepend
+
+nnn=201		TATA Communications (AS6453)
+nnn=202		TELIA (AS1299)
+nnn=204		COMSTAR (AS8359)
+nnn=205		GOLDENTELECOM (AS3216)
+nnn=299		All Upstreams
+
+nnn=301		MSK-IX
+nnn=303		SPB-IX
+nnn=399		All Russian Peers
+
+nnn=401		DE-CIX
+nnn=499		All Foreign Peers
+
+nnn=999		All Upstreams and Peers
+
+8744:5nnna	$a to $nnn
+
+
+#
 # Swiat Internet SA Transit Network
 # http://www.ripe.net/perl/whois?AS12887
 # last update: 07.09.2004
