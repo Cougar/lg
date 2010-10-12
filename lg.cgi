@@ -47,6 +47,8 @@ my $httpmethod = "POST";
 my $timeout;
 my $disclaimer;
 my $securemode = 1;
+my $ssh2key;
+my $ssh2pubkey;
 
 my %router_list;
 my @routers;
@@ -351,6 +353,10 @@ sub xml_charparse {
 		}
 	} elsif ($elem eq "separator") {
 		push @routers, "---- $str ----";
+	} elsif ($elem eq "ssh2key") {
+		$ssh2key = $str;
+	} elsif ($elem eq "ssh2pubkey") {
+		$ssh2pubkey = $str;
 	} else {
 		print "<!--    C [$xml_current_router_name] [" . $xp->current_element . "] [$str] -->\n";
 	}
@@ -386,6 +392,8 @@ sub xml_startparse {
 		    ($str2 ne "timeout") &&
 		    ($str2 ne "disclaimer") &&
 		    ($str2 ne "securemode") &&
+		    ($str2 ne "ssh2key") &&
+		    ($str2 ne "ssh2pubkey") &&
 		    ($str2 ne "router_list") &&
 		    ($str2 ne "argument_list")) {
 			die("Illegal configuration tag \"$str\" at line " . $xp->current_line . ", column " . $xp->current_column);
@@ -645,6 +653,12 @@ my $regexp = 0;
 sub run_command
 {
 	my ($hostname, $host, $command) = @_;
+	my $best = 0;
+	my $count = 0;
+	my $telnet;
+	my $ssh;
+	my $ssh2;
+	my @output;
 	# This regexp is from RFC 2396 - URI Generic Syntax
 	if ($host !~ /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/) {
 		die ("Illegal URI: \"$host\"");
@@ -706,6 +720,25 @@ sub run_command
 		$ssh->register_handler('stdout', sub { showlines($_[1]->bytes); });
 		$ssh->register_handler('stderr', sub { showlines($_[1]->bytes); });
 		$ssh->cmd("$remotecmd");
+	} elsif ($scheme eq "ssh2") {
+		eval "
+			use Net::SSH2;
+		";
+		die $@ if $@;
+		$port = 22 if ($port eq "");
+		$ssh2 = Net::SSH2->new();
+		$ssh2->connect($host, $port) or die $!;
+		if ($password) {
+			$ssh2->auth_password($login, $password);
+		} else {
+			$ssh2->auth_publickey($login, $ssh2pubkey, $ssh2key);
+		}
+		my $chan = $ssh2->channel();
+		$chan->exec("$remotecmd");
+		while (<$chan>) {
+			showlines($_);
+		};
+		$chan->close;
 	} elsif ($scheme eq "telnet") {
 		my @output;
 		eval "
