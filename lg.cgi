@@ -492,7 +492,7 @@ sub print_head {
 	my ($arg) = @_;
 	my ($titlestr) = $title;
 	$titlestr .= " - $arg" if ($arg ne "");
-	print "Content-type: text/html\n\n";
+	print "Content-type: text/html; charset=utf-8\n\n";
 	print "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
 	print "<!--\n\t$SYS_progid\n\thttp://freshmeat.net/projects/lg/\n-->\n";
 	print "<HTML>\n";
