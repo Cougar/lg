@@ -342,7 +342,7 @@ sub xml_charparse {
 	} elsif ($elem eq "timeout") {
 		$timeout = $str;
 	} elsif ($elem eq "disclaimer") {
-		$disclaimer = "<CENTER><TABLE WIDTH=\"85%\"><TR><TD><FONT SIZE=\"-3\">Disclaimer: $str</FONT></TD></TR></TABLE></CENTER>\n";
+		$disclaimer = "<CENTER><TABLE WIDTH=\"85%\"><TR><TD><FONT SIZE=-3>Disclaimer: $str</FONT></TD></TR></TABLE></CENTER>\n";
 	} elsif ($elem eq "securemode") {
 		if ($str =~ /^(0|off|no)$/i) {
 			$securemode = 0;
@@ -501,11 +501,9 @@ sub print_head {
 	if ($favicon ne "") {
 		print "<LINK REL=\"shortcut icon\" HREF=\"${favicon}\">\n";
 	}
-	print "<meta name=\"description\" content=\"$titlestr\" \>\n";
-	print "<meta name=\"keywords\" content=\"Looking glass, LG, BGP, prefix-list, AS-path, ASN, traceroute, ping, IPv6, Cisco, Juniper, Zebra, Quagga, internet\" />\n";
-	print "<style type=\"text/css\">\n";
-	print "em { font-style: normal; background: #ffff00; color: #000000; }\n";
-	print "</style>\n";
+	print "<meta name=description content=\"$titlestr\"\>\n";
+	print "<meta name=keywords content=\"Looking glass, LG, BGP, prefix-list, AS-path, ASN, traceroute, ping, IPv6, Cisco, Juniper, Zebra, Quagga, internet\"/>\n";
+	print "<style>em { font-style: normal; background: #ffff00; color: #000000; }</style>\n";
 	print "</HEAD>\n";
 	print "<BODY BGCOLOR=\"#FFFFFF\" TEXT=\"#000000\">\n";
 	if ($logoimage ne "") {
@@ -524,8 +522,12 @@ sub print_head {
 }
 
 sub print_form {
+	if ($httpmethod eq "GET") {
+		print "<FORM ACTION=\"$lgurl\">\n";
+	} else {
+		print "<FORM METHOD=$httpmethod ACTION=\"$lgurl\">\n";
+	}
 	print <<EOT;
-<FORM METHOD="$httpmethod" ACTION="$lgurl">
 <CENTER>
 <TABLE BORDER=0 BGCOLOR="#EFEFEF"><TR><TD>
 <TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>
@@ -535,29 +537,29 @@ sub print_form {
 <TH BGCOLOR="#000000" NOWRAP><FONT COLOR="#FFFFFF">Node</FONT></TH></TR>
 <TR><TD>
 <TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>
-<TR><TD><INPUT TYPE="radio" NAME="query" VALUE="bgp"></TD><TD>&nbsp;bgp</TD></TR>
-<TR><TD><INPUT TYPE="radio" NAME="query" VALUE="advertised-routes"></TD><TD>&nbsp;bgp&nbsp;advertised-routes</TD></TR>
-<TR><TD><INPUT TYPE="radio" NAME="query" VALUE="summary"></TD><TD>&nbsp;bgp&nbsp;summary</TD></TR>
-<TR><TD><INPUT TYPE="radio" NAME="query" VALUE="ping"></TD><TD>&nbsp;ping</TD></TR>
-<TR><TD><INPUT TYPE="radio" NAME="query" VALUE="trace" CHECKED></TD><TD>&nbsp;trace</TD></TR>
+<TR><TD><INPUT TYPE=radio NAME=query VALUE=bgp></TD><TD>&nbsp;bgp</TD></TR>
+<TR><TD><INPUT TYPE=radio NAME=query VALUE=advertised-routes></TD><TD>&nbsp;bgp&nbsp;advertised-routes</TD></TR>
+<TR><TD><INPUT TYPE=radio NAME=query VALUE=summary></TD><TD>&nbsp;bgp&nbsp;summary</TD></TR>
+<TR><TD><INPUT TYPE=radio NAME=query VALUE=ping></TD><TD>&nbsp;ping</TD></TR>
+<TR><TD><INPUT TYPE=radio NAME=query VALUE=trace CHECKED></TD><TD>&nbsp;trace</TD></TR>
 EOT
 	if ($ipv4enabled && $ipv6enabled) {
 		print <<EOT;
-<TR><TD></TD><TD><SELECT NAME="protocol">
-<OPTION VALUE=\"IPv4\"> IPv4
-<OPTION VALUE=\"IPv6\"> IPv6
+<TR><TD></TD><TD><SELECT NAME=protocol>
+<OPTION VALUE=IPv4> IPv4
+<OPTION VALUE=IPv6> IPv6
 </SELECT></TD></TR>
 </TABLE>
 EOT
 	} elsif ($ipv4enabled) {
-		print "</TABLE>\n<INPUT TYPE=\"hidden\" NAME=\"protocol\" VALUE=\"IPv4\">\n";
+		print "</TABLE>\n<INPUT TYPE=hidden NAME=protocol VALUE=IPv4>\n";
 	} elsif ($ipv6enabled) {
-		print "</TABLE>\n<INPUT TYPE=\"hidden\" NAME=\"protocol\" VALUE=\"IPv6\">\n";
+		print "</TABLE>\n<INPUT TYPE=hidden NAME=protocol VALUE=IPv6>\n";
 	}
 	print <<EOT;
 </TD>
-<TD ALIGN="CENTER">&nbsp;<BR><INPUT NAME="addr" SIZE="30"><BR><FONT SIZE="-1">&nbsp;<SUP>&nbsp;</SUP>&nbsp;</FONT></TD>
-<TD ALIGN="RIGHT">&nbsp;<BR><SELECT NAME="router">
+<TD ALIGN=CENTER>&nbsp;<BR><INPUT NAME=addr SIZE=30><BR><FONT SIZE=-1>&nbsp;<SUP>&nbsp;</SUP>&nbsp;</FONT></TD>
+<TD ALIGN=RIGHT>&nbsp;<BR><SELECT NAME=router>
 EOT
 	my $remotelg = 0;
 	my $optgroup = 0;
@@ -588,7 +590,7 @@ EOT
 			$descr .= " *";
 			$remotelg++;
 		}
-		print "<OPTION VALUE=\"". html_encode($router) . "\"$default> " . html_encode($descr) . "\n";
+		print "<OPTION VALUE=". html_encode($router) . "$default> " . html_encode($descr) . "\n";
 	}
 	print "</OPTGROUP>\n" if ($optgroup);
 	if ($remotelg) {
@@ -597,12 +599,11 @@ EOT
 		$remotelg = "<SUP>&nbsp;</SUP>&nbsp;";
 	}
 print <<EOT;
-</SELECT><BR><FONT SIZE="-1">&nbsp;&nbsp;$remotelg</FONT></TD>
+</SELECT><BR><FONT SIZE=-1>&nbsp;&nbsp;$remotelg</FONT></TD>
 </TR>
-<TR><TD ALIGN="CENTER" COLSPAN=3>
+<TR><TD ALIGN=CENTER COLSPAN=3>
 <P>
-<INPUT TYPE="SUBMIT" VALUE="Submit"> | 
-<INPUT TYPE="RESET" VALUE="Reset"> 
+<INPUT TYPE=SUBMIT VALUE=Submit> | <INPUT TYPE=RESET VALUE=Reset>
 <P>
 </TD></TR>
 </TABLE>
@@ -616,14 +617,11 @@ EOT
 sub print_tail {
 	print <<EOT;
 <P>
-<HR SIZE="2" WIDTH="85%" NOSHADE>
+<HR SIZE=2 WIDTH="85%" NOSHADE>
 $disclaimer
 <P>
 <CENTER>
-<I>
-  Please email questions or comments to
- <A HREF="mailto:$email">$email</A>.
-</I>
+<I>Please email questions or comments to <A HREF="mailto:$email">$email</A>.</I>
 <P>
 </CENTER>
 </BODY>
@@ -633,14 +631,14 @@ EOT
 
 sub print_error
 {
-	print "<CENTER><FONT SIZE=\"+2\" COLOR=\"#ff0000\">" . join(" ", @_) . "</FONT></CENTER>\n";
+	print "<CENTER><FONT SIZE=+2 COLOR=\"#ff0000\">" . join(" ", @_) . "</FONT></CENTER>\n";
 	&print_tail;
 	exit 1;
 }
 
 sub print_warning
 {
-	print "<CENTER><FONT SIZE=\"+2\" COLOR=\"#0000ff\">WARNING! " . join(" ", @_) . "</FONT></CENTER>\n";
+	print "<CENTER><FONT SIZE=+2 COLOR=\"#0000ff\">WARNING! " . join(" ", @_) . "</FONT></CENTER>\n";
 	print <<EOT;
 <P>
 <HR SIZE=2 WIDTH="85%" NOSHADE>
