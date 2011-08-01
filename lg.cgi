@@ -590,7 +590,7 @@ EOT
 			$descr .= " *";
 			$remotelg++;
 		}
-		print "<OPTION VALUE=". html_encode($router) . "$default> " . html_encode($descr) . "\n";
+		print "<OPTION VALUE=\"". html_encode($router) . "\"$default> " . html_encode($descr) . "\n";
 	}
 	print "</OPTGROUP>\n" if ($optgroup);
 	if ($remotelg) {
