@@ -13,6 +13,16 @@ LG is released under GPL licence. Look at COPYING file.
 
 
 
+                                   SECURITY
+
+
+It is suggested to move configuration file lg.conf outside of webserver
+direcory. One suitable place for that could be /usr/local/etc. Just move
+configuration to this directory and add full path to the $configfile
+variable in the beginning of lg.cgi.
+
+
+
                                    INSTALL
 
 
