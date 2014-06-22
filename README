@@ -21,6 +21,13 @@ direcory. One suitable place for that could be /usr/local/etc. Just move
 configuration to this directory and add full path to the $configfile
 variable in the beginning of lg.cgi.
 
+The default location of SSH configuration directory .ssh is initialized to
+the same directory where CGI is running: /usr/local/httpd/htdocs/lg.
+It is suggested to change $HOME enironment variable in the beginning
+of lg.cgi script to some other directory accessible by webserver (wwwrun
+for example) which is outside of default webserver root (in opensuse
+/var/lib/wwwrun can be used). It is srongly suggested to change this in
+case you are going to use key based authentication.
 
 
                                    INSTALL
