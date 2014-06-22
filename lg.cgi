@@ -168,6 +168,9 @@ if ((! defined $router_list{$FORM{router}}) ||
 	exit;
 }
 
+$FORM{addr} =~ s/\s.*// if (($FORM{query} eq "ping") || ($FORM{query} eq "trace"));
+$FORM{addr} =~ s/[^\s\d\.:\w\-_\/\$]//g;
+
 if ($router_list{$FORM{router}} =~ /^http[s]{0,1}:/) {
 	if ($logfile ne "") {
 		print LOG " \"$FORM{router}\" \"$FORM{query}" . ($FORM{addr} ne "" ? " $FORM{addr}" : "") . "\"\n";
