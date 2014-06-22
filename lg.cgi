@@ -3,7 +3,7 @@
 #    Looking Glass CGI with ssh, telnet, rexec and remote LG support
 #                    with IPv4 and IPv6 support
 #
-#    Copyright (C) 2000-2002 Cougar <cougar@random.ee>
+#    Copyright (C) 2000-2014 Cougar <cougar@random.ee>
 #                                   http://www.version6.net/
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 
 use strict qw(subs vars);
 
+$configfile = "lg.conf";
 $ENV{HOME} = ".";	# SSH needs access for $HOME/.ssh
 
 use XML::Parser;
@@ -289,7 +290,7 @@ exit;
 
 sub read_config {
 	my $xp = new XML::Parser(ProtocolEncoding => "ISO-8859-1", Handlers => {Char => \&xml_charparse, Start => \&xml_startparse, End => \&xml_endparse});
-	$xp->parsefile("lg.conf");
+	$xp->parsefile($configfile);
 	undef($xp);
 }
 
