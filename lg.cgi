@@ -82,6 +82,22 @@ my %valid_query = (
 			"trace"			=>	"traceroute ipv6 %s"
 			}
 		},
+        "iosxr"         =>      {
+                "ipv4"                  =>      {
+                        "bgp"                   =>      "show bgp ipv4 unicast %s",
+                        "advertised-routes"     =>      "show bgp ipv4 unicast neighbors %s advertised-routes",
+                        "summary"               =>      "show bgp ipv4 unicast summary",
+                        "ping"                  =>      "ping %s",
+                        "trace"                 =>      "traceroute %s"
+                        },
+                "ipv6"          =>      {
+                        "bgp"                   =>      "show bgp ipv6 unicast %s",
+                        "advertised-routes"     =>      "show bgp ipv6 unicast neighbors %s advertised-routes",
+                        "summary"               =>      "show bgp ipv6 unicast summary",
+                        "ping"                  =>      "ping ipv6 %s",
+                        "trace"                 =>      "traceroute ipv6 %s"
+                        }
+                },
 	"zebra"		=>	{
 		"ipv4"			=>	{
 			"bgp"			=>	"show ip bgp %s",
