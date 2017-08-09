@@ -2020,6 +2020,103 @@ URL		http://www.ripe.net/perl/whois?AS16150
 16150:92	Announce to peers only prepend twice
 
 #
+# TTK
+# https://apps.db.ripe.net/search/query.html?searchtext=AS20485
+# last update: 12.01.2017
+#
+
+AS20485
+
+URL             https://apps.db.ripe.net/search/query.html?searchtext=AS20485
+
+ss=00           Customer
+ss=01           Megafon
+ss=03           Vimpelcom
+ss=04           Comstar
+ss=06           Level3
+ss=07           CHINA TELECOM
+ss=09           TeliaSonera
+ss=10           Vkontakte
+ss=11           Rostelecom
+ss=12           Mail&Odnoklassniki
+ss=14           Cogent
+ss=15           TATA
+ss=28           ChinaTietong
+ss=29           Telecom Italia
+ss=31           TWITCH
+ss=32           VALVE
+ss=39           Globecorp
+ss=40           Limelight
+ss=41           Facebook
+ss=42           LEASEWEB
+ss=43           PCCW
+ss=44           WEBAZILLA (AS-IPTRANSIT)
+ss=45           ETT
+ss=47           NTT
+ss=48           Vodafone
+
+nn=07           , Frankfurt
+nn=08           , Stockholm
+nn=09           , HongKong
+nn=10           , Tokyo
+nn=11           , Syktivkar
+nn=12           , YoshkarOla
+nn=13           , Saransk
+nn=16           , Kazan
+nn=18           , Izhevsk
+nn=21           , Cheboksary
+nn=22           , Barnaul
+nn=23           , Krasnodar
+nn=24           , Krasnoyarsk
+nn=25           , Vladivostok
+nn=26           , Stavropol
+nn=27           , Khabarovsk
+nn=28           , Amurskaya region
+nn=29           , Arkhangelsk
+nn=30           , Astrakhan
+nn=31           , Belgorod
+nn=32           , Bryansk
+nn=34           , Volgograd
+nn=36           , Voronezh
+nn=38           , Irkutsk, Bratsk
+nn=39           , Kaliningrad
+nn=42           , Kemerovo
+nn=43           , Kirov
+nn=45           , Kurgan
+nn=46           , Kursk
+nn=48           , Lipetsk
+nn=52           , Nizhny Novgorod
+nn=54           , Novosibirsk
+nn=55           , Omsk
+nn=56           , Orenburg
+nn=58           , Penza
+nn=59           , Perm
+nn=60           , Pskov
+nn=61           , RostovDon
+nn=62           , Ryazan
+nn=63           , Samara, Ufa
+nn=64           , Saratov
+nn=66           , Ekaterinburg
+nn=67           , Smolensk
+nn=70           , Tomsk
+nn=71           , Tula
+nn=72           , Tumen
+nn=73           , Ulyanovsk
+nn=74           , Chelyabinsk
+nn=75           , Chita
+nn=76           , Yaroslavl
+nn=77           , Moscow
+nn=78           , St.Petersburg
+nn=86           , Surgut
+nn=88           , USA
+nn=99           , Moscow
+
+20485:1ssnn     $ss in Russia$nn
+20485:2ssnn     $ss in Europe$nn
+20485:3ssnn     $ss in Asia$nn
+20485:4ssnn     $ss in America$nn
+
+#
 # InSat GmbH
 # http://www.ripe.net/perl/whois?AS20535
 # last update: 07.09.2004
